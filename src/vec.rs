@@ -47,6 +47,7 @@ impl<'s, T> VecAssertions for Spec<'s, &'s Vec<T>> {
     /// type must be of `&Vec` with a matching lifetime.
     ///
     /// ```rust
+    /// # use speculoos::prelude::*;
     /// assert_that(&&vec![1, 2, 3, 4]).has_length(4);
     /// ```
     fn has_length(&mut self, expected: usize) {
@@ -63,6 +64,7 @@ impl<'s, T> VecAssertions for Spec<'s, &'s Vec<T>> {
     /// matching lifetime.
     ///
     /// ```rust
+    /// # use speculoos::prelude::*;
     /// let test_vec: &Vec<u8> = &vec![];
     /// assert_that(&test_vec).is_empty();
     /// ```
