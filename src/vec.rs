@@ -3,6 +3,7 @@ use super::{AssertionFailure, Spec};
 pub trait VecAssertions {
     fn has_length(&mut self, expected: usize);
     fn is_empty(&mut self);
+    fn is_not_empty(&mut self);
 }
 
 impl<'s, T> VecAssertions for Spec<'s, Vec<T>> {
@@ -11,7 +12,7 @@ impl<'s, T> VecAssertions for Spec<'s, Vec<T>> {
     ///
     /// ```rust
     /// # use speculoos::prelude::*;
-    /// assert_that(&vec![1, 2, 3, 4]).has_length(4);
+    /// assert_that!(vec![1, 2, 3, 4]).has_length(4);
     /// ```
     fn has_length(&mut self, expected: usize) {
         let length = self.subject.len();
@@ -28,7 +29,7 @@ impl<'s, T> VecAssertions for Spec<'s, Vec<T>> {
     /// ```rust
     /// # use speculoos::prelude::*;
     /// let test_vec: Vec<u8> = vec![];
-    /// assert_that(&test_vec).is_empty();
+    /// assert_that!(test_vec).is_empty();
     /// ```
     fn is_empty(&mut self) {
         let subject = self.subject;
@@ -37,6 +38,24 @@ impl<'s, T> VecAssertions for Spec<'s, Vec<T>> {
             AssertionFailure::from_spec(self)
                 .with_expected("an empty vec".to_string())
                 .with_actual(format!("a vec with length <{:?}>", subject.len()))
+                .fail();
+        }
+    }
+
+    /// Asserts that the subject vector is not empty. The subject type must be of `Vec`.
+    ///
+    /// ```rust
+    /// # use speculoos::prelude::*;
+    /// let test_vec: Vec<u8> = vec![1];
+    /// assert_that!(test_vec).is_not_empty();
+    /// ```
+    fn is_not_empty(&mut self) {
+        let subject = self.subject;
+
+        if subject.is_empty() {
+            AssertionFailure::from_spec(self)
+                .with_expected("an non empty vec".to_string())
+                .with_actual(format!("a vec with length {}", subject.len()))
                 .fail();
         }
     }
@@ -75,6 +94,24 @@ impl<'s, T> VecAssertions for Spec<'s, &'s Vec<T>> {
             AssertionFailure::from_spec(self)
                 .with_expected("an empty vec".to_string())
                 .with_actual(format!("a vec with length <{:?}>", subject.len()))
+                .fail();
+        }
+    }
+
+    /// Asserts that the subject vector is not empty. The subject type must be of `&Vec` with a
+    /// matching lifetime.
+    /// ```rust
+    /// # use speculoos::prelude::*;
+    /// let test_vec: Vec<u8> = vec![1];
+    /// assert_that(&test_vec).is_not_empty();
+    /// ```
+    fn is_not_empty(&mut self) {
+        let subject = self.subject;
+
+        if subject.is_empty() {
+            AssertionFailure::from_spec(self)
+                .with_expected("an non empty vec".to_string())
+                .with_actual(format!("a vec with length {}", subject.len()))
                 .fail();
         }
     }

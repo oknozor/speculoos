@@ -175,38 +175,6 @@ where
     T: Debug,
     &'s I: IntoIterator<Item = &'s T>,
 {
-    /// Maps the values of the subject before asserting that the mapped subject contains the
-    /// provided value. The subject must implement IntoIterator, and the type of the mapped
-    /// value must implement `PartialEq`.
-    ///
-    /// NOTE: The panic message will refer to the mapped values rather than the values present in
-    /// the original subject.
-    ///
-    /// ```rust
-    /// #[derive(PartialEq, Debug)]
-    /// struct Simple {
-    ///     pub val: usize,
-    /// }
-    ///
-    /// //...
-    /// # use speculoos::prelude::*;
-    /// assert_that(&vec![Simple { val: 1 }, Simple { val: 2 } ]).mapped_contains(|x| x.val, &2);
-    /// ```
-    fn mapped_contains<F, M: 's>(&mut self, mapping_function: F, expected_value: &M)
-    where
-        M: Debug + PartialEq,
-        F: Fn(&'s T) -> M,
-    {
-        let subject = self.subject;
-
-        let mapped_vec: Vec<M> = subject.into_iter().map(mapping_function).collect();
-        if mapped_vec.contains(expected_value) {
-            return;
-        }
-
-        panic_unmatched(self, expected_value, mapped_vec, true);
-    }
-
     /// Asserts that the subject contains a matching item by using the provided function.
     /// The subject must implement `IntoIterator`, and the contained type must implement `Debug`.
     ///
@@ -243,6 +211,38 @@ where
             "expectation failed for iterator with values <{:?}>",
             actual
         ));
+    }
+
+    /// Maps the values of the subject before asserting that the mapped subject contains the
+    /// provided value. The subject must implement IntoIterator, and the type of the mapped
+    /// value must implement `PartialEq`.
+    ///
+    /// NOTE: The panic message will refer to the mapped values rather than the values present in
+    /// the original subject.
+    ///
+    /// ```rust
+    /// #[derive(PartialEq, Debug)]
+    /// struct Simple {
+    ///     pub val: usize,
+    /// }
+    ///
+    /// //...
+    /// # use speculoos::prelude::*;
+    /// assert_that(&vec![Simple { val: 1 }, Simple { val: 2 } ]).mapped_contains(|x| x.val, &2);
+    /// ```
+    fn mapped_contains<F, M: 's>(&mut self, mapping_function: F, expected_value: &M)
+    where
+        M: Debug + PartialEq,
+        F: Fn(&'s T) -> M,
+    {
+        let subject = self.subject;
+
+        let mapped_vec: Vec<M> = subject.into_iter().map(mapping_function).collect();
+        if mapped_vec.contains(expected_value) {
+            return;
+        }
+
+        panic_unmatched(self, expected_value, mapped_vec, true);
     }
 }
 
