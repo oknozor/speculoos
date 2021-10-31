@@ -329,9 +329,10 @@ impl<'r, T: DescriptiveSpec<'r>> AssertionFailure<'r, T> {
     /// Builds the failure message with a description (if present), the expected value,
     /// and the actual value and then calls `panic` with the created message.
     pub fn fail(&mut self) {
-        if self.expected.is_none() || self.actual.is_none() {
-            panic!("invalid assertion");
-        }
+        assert!(
+            !(self.expected.is_none() || self.actual.is_none()),
+            "invalid assertion"
+        );
 
         let location = self.maybe_build_location();
         let subject_name = self.maybe_build_subject_name();
