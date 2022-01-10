@@ -466,12 +466,14 @@ where
     ///
     /// NOTE: The resultant panic message will only state the actual value. It's recommended that
     /// you write your own assertion rather than relying upon this.
+    /// 
+    /// `matches` returns &mut &Self, making it possible to chain multiple assertions.
     ///
     /// ```rust
     /// # use speculoos::prelude::*;
     /// assert_that(&"hello").matches(|x| x.eq(&"hello"));
     /// ```
-    pub fn matches<F>(&mut self, matching_function: F)
+    pub fn matches<F>(&mut self, matching_function: F) -> &mut Self
     where
         F: Fn(&'s S) -> bool,
     {
@@ -481,6 +483,8 @@ where
             AssertionFailure::from_spec(self)
                 .fail_with_message(format!("expectation failed for value <{:?}>", subject));
         }
+        
+        self
     }
 
     /// Transforms the subject of the `Spec` by passing it through to the provided mapping
@@ -660,6 +664,14 @@ mod tests {
     fn should_panic_if_value_does_not_match() {
         let value = "Hello";
         assert_that(&value).matches(|val| val.eq(&"Hi"));
+    }
+    
+    #[test]
+    fn should_permit_chained_matches_calls() {
+        let value = ("Hello", "World");
+        assert_that(&value)
+            .matches(|val| val.0.eq("Hello"))
+            .matches(|val| val.1.eq("World"));
     }
 
     #[test]
