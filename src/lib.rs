@@ -1,3 +1,5 @@
+#![allow(clippy::wrong_self_convention)]
+
 //! Fluent test assertions in Rust
 //!
 //! Speculoos is a testing framework designed to make your assertions read like plain English.
