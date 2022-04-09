@@ -21,25 +21,20 @@ jobs:
           toolchain: stable
           override: true
 
-      - name: Coverage
-        uses: actions-rs/tarpaulin@v0.1
+      - name: Install Rust
+        run: rustup toolchain install stable --component llvm-tools-preview
 
-      - name: Upload coverage
-        uses: codecov/codecov-action@v2
+      - name: Install cargo-llvm-cov
+        uses: taiki-e/install-action@cargo-llvm-cov
+
+      - name: Generate code coverage
+        run: cargo llvm-cov --all-features --workspace --lcov --output-path lcov.info
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
         with:
+          files: lcov.info
           fail_ci_if_error: true
-
-      - name: Archive code coverage results
-        uses: actions/upload-artifact@v1
-        with:
-          name: code-coverage-report
-          path: cobertura.xml
-
-      - name: Archive code coverage results
-        uses: actions/upload-artifact@v1
-        with:
-          name: code-coverage-report
-          path: cobertura.xml
 
   lints:
     name: Lints & Format
