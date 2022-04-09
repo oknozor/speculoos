@@ -3,10 +3,44 @@ use super::{AssertionFailure, DescriptiveSpec, Spec};
 use std::borrow::Borrow;
 
 pub trait StrAssertions<T> {
+    /// Asserts that the subject string starts with the provided string.
+    ///
+    /// ```rust
+    /// # use speculoos::prelude::*;
+    /// assert_that!("Hello").starts_with("H");
+    /// ```
     fn starts_with<E: AsRef<str>>(&mut self, expected: E);
+
+    /// Asserts that the subject string ends with the provided string.
+    ///
+    /// ```rust
+    /// # use speculoos::prelude::*;
+    /// assert_that!("Hello").ends_with("o");
+    /// ```
     fn ends_with<E: AsRef<str>>(&mut self, expected: E);
+
+    /// Asserts that the subject string contains the provided string.
+    ///
+    /// ```rust
+    /// # use speculoos::prelude::*;
+    /// assert_that!("Hello").contains("e");
+    /// ```
     fn contains<E: AsRef<str>>(&mut self, expected: E);
+
+    /// Asserts that the subject string contains the provided string.
+    ///
+    /// ```rust
+    /// # use speculoos::prelude::*;
+    /// assert_that!("Hello").contains("e");
+    /// ```
     fn does_not_contain<E: AsRef<str>>(&mut self, expected: E);
+
+    /// Asserts that the subject string is empty.
+    ///
+    /// ```rust
+    /// # use speculoos::prelude::*;
+    /// assert_that!("").is_empty();
+    /// ```
     fn is_empty(&mut self);
 }
 
@@ -14,56 +48,26 @@ impl<'s, T> StrAssertions<T> for Spec<'s, T>
 where
     T: AsRef<str>,
 {
-    /// Asserts that the subject `&str` starts with the provided `&str`.
-    ///
-    /// ```rust
-    /// # use speculoos::prelude::*;
-    /// assert_that(&"Hello").starts_with("H");
-    /// ```
     fn starts_with<E: AsRef<str>>(&mut self, expected: E) {
         let subject = self.subject.as_ref();
         starts_with(self, subject, expected.as_ref());
     }
 
-    /// Asserts that the subject `&str` ends with the provided `&str`.
-    ///
-    /// ```rust
-    /// # use speculoos::prelude::*;
-    /// assert_that(&"Hello").ends_with("o");
-    /// ```
     fn ends_with<E: AsRef<str>>(&mut self, expected: E) {
         let subject = self.subject.as_ref();
         ends_with(self, subject, expected.as_ref());
     }
 
-    /// Asserts that the subject `&str` contains the provided `&str`.
-    ///
-    /// ```rust
-    /// # use speculoos::prelude::*;
-    /// assert_that(&"Hello").contains("e");
-    /// ```
     fn contains<E: AsRef<str>>(&mut self, expected: E) {
         let subject = self.subject.as_ref();
         contains(self, subject, expected.as_ref());
     }
 
-    /// Asserts that the subject `&str` contains the provided `&str`.
-    ///
-    /// ```rust
-    /// # use speculoos::prelude::*;
-    /// assert_that(&"Hello").contains("e");
-    /// ```
     fn does_not_contain<E: AsRef<str>>(&mut self, expected: E) {
         let subject = self.subject.as_ref();
         does_not_contain(self, subject, expected.as_ref());
     }
 
-    /// Asserts that the subject `&str` is empty.
-    ///
-    /// ```rust
-    /// # use speculoos::prelude::*;
-    /// assert_that(&"").is_empty();
-    /// ```
     fn is_empty(&mut self) {
         let subject = self.subject.as_ref();
         is_empty(self, subject);

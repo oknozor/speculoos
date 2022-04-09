@@ -2,7 +2,7 @@
 
 //! Fluent test assertions in Rust
 //!
-//! Speculoos is a testing framework designed to make your assertions read like plain English.
+//! Speculoos is a testing crate designed to make your assertions read like plain English.
 //! This allows you to more easily expose the intent of your test, rather than having it shrouded by
 //! assertions which work, but are opaque on their meaning.
 //!
@@ -16,22 +16,8 @@
 //!
 //! ```toml
 //! [dependencies]
-//! speculoos = "0.6.0"
+//! speculoos = "0.8.0"
 //! ```
-//!
-//! Then add this to your crate:
-//!
-//! ```rust
-//! extern crate speculoos;
-//! ```
-//!
-//! If you want macro support, include `#[macro_use]` to the declaration:
-//!
-//! ```rust, ignore
-//! #[macro_use]
-//! extern crate speculoos;
-//! ```
-//!
 //! To quickly start using assertions, `use` the prelude module:
 //!
 //! ```rust
@@ -84,7 +70,7 @@
 //! #[test]
 //! pub fn should_be_the_correct_string() {
 //!     let subject = "Hello World!";
-//!     assert_that(&subject);
+//!     assert_that!(subject);
 //! }
 //! ```
 //!
@@ -103,7 +89,7 @@
 //! #[test]
 //! pub fn should_be_the_correct_string() {
 //!     let subject = "Hello World!";
-//!     assert_that(&subject).starts_with(&"H");
+//!     assert_that!(subject).starts_with("H");
 //! }
 //! ```
 //!
@@ -119,7 +105,7 @@
 //! #[test]
 //! pub fn should_be_the_correct_string() {
 //!     let subject = "ello World!";
-//!     assert_that(&subject).starts_with(&"H");
+//!     assert_that!(subject).starts_with("H");
 //! }
 //! ```
 //!
@@ -180,6 +166,17 @@ mod colours {
 #[cfg(feature = "num")]
 extern crate num;
 
+/// The [`assert_that!`] macro work just like [`assert_that`](assert_that()) but automatically takes a `&` reference
+/// to the assertions subject.
+///
+/// ## Example
+/// ```rust
+/// # use speculoos::prelude::*;
+/// #[test]
+/// fn should_be_equals() {
+///     assert_that!("Hello").is_equal_to("Hello");
+/// }
+/// ```
 #[macro_export]
 macro_rules! assert_that {
     (&$subject:tt) => {
@@ -252,6 +249,17 @@ pub struct Spec<'s, S: 's> {
 /// Wraps a subject in a `Spec` to provide assertions against it.
 ///
 /// The subject must be a reference.
+///
+/// **To avoid taking a reference,you can use the [`assert_that!`] macro instead.**
+///
+/// ## Example
+/// ```rust
+/// # use speculoos::prelude::*;
+/// #[test]
+/// fn should_be_equals() {
+///     assert_that(&"Hello").is_equal_to("Hello");
+/// }
+/// ```
 pub fn assert_that<S>(subject: &S) -> Spec<S> {
     Spec {
         subject,
