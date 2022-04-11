@@ -1,7 +1,7 @@
 use super::{AssertionFailure, DescriptiveSpec, Spec};
 
 use std::borrow::Borrow;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 pub trait PathAssertions {
     fn exists(&mut self);
@@ -11,14 +11,14 @@ pub trait PathAssertions {
     fn has_file_name<'r, E: Borrow<&'r str>>(&mut self, expected_file_name: E);
 }
 
-impl<'s> PathAssertions for Spec<'s, &'s Path> {
+impl<'s, T> PathAssertions for Spec<'s, T> where T: AsRef<Path>{
     /// Asserts that the subject `Path` refers to an existing location.
     ///
     /// ```rust, ignore
     /// assert_that(&Path::new("/tmp/file")).exists();
     /// ```
     fn exists(&mut self) {
-        exists(self.subject, self)
+        exists(self.subject.as_ref(), self)
     }
 
     /// Asserts that the subject `Path` does not refer to an existing location.
@@ -29,7 +29,7 @@ impl<'s> PathAssertions for Spec<'s, &'s Path> {
     /// assert_that(&Path::new("/tmp/file")).does_not_exist();
     /// ```
     fn does_not_exist(&mut self) {
-        does_not_exist(self.subject, self)
+        does_not_exist(self.subject.as_ref(), self)
     }
 
     /// Asserts that the subject `Path` refers to an existing file.
@@ -38,7 +38,7 @@ impl<'s> PathAssertions for Spec<'s, &'s Path> {
     /// assert_that(&Path::new("/tmp/file")).is_a_file();
     /// ```
     fn is_a_file(&mut self) {
-        is_a_file(self.subject, self)
+        is_a_file(self.subject.as_ref(), self)
     }
 
     /// Asserts that the subject `Path` refers to an existing directory.
@@ -47,7 +47,7 @@ impl<'s> PathAssertions for Spec<'s, &'s Path> {
     /// assert_that(&Path::new("/tmp/dir/")).is_a_directory();
     /// ```
     fn is_a_directory(&mut self) {
-        is_a_directory(self.subject, self)
+        is_a_directory(self.subject.as_ref(), self)
     }
 
     /// Asserts that the subject `Path` has the expected file name.
@@ -59,52 +59,6 @@ impl<'s> PathAssertions for Spec<'s, &'s Path> {
     /// ```
     fn has_file_name<'r, E: Borrow<&'r str>>(&mut self, expected_file_name: E) {
         has_file_name(self.subject, expected_file_name.borrow(), self)
-    }
-}
-
-impl<'s> PathAssertions for Spec<'s, PathBuf> {
-    /// Asserts that the subject `PathBuf` refers to an existing location.
-    ///
-    /// ```rust, ignore
-    /// assert_that(&PathBuf::from("/tmp/file")).exists();
-    /// ```
-    fn exists(&mut self) {
-        exists(self.subject.as_path(), self)
-    }
-
-    /// Asserts that the subject `PathBuf` does not refer to an existing location.
-    ///
-    /// ```rust, ignore
-    /// assert_that(&PathBuf::from("/tmp/file")).does_not_exist();
-    /// ```
-    fn does_not_exist(&mut self) {
-        does_not_exist(self.subject.as_path(), self)
-    }
-
-    /// Asserts that the subject `PathBuf` refers to an existing file.
-    ///
-    /// ```rust, ignore
-    /// assert_that(&PathBuf::from("/tmp/file")).is_a_file();
-    /// ```
-    fn is_a_file(&mut self) {
-        is_a_file(self.subject.as_path(), self)
-    }
-
-    /// Asserts that the subject `PathBuf` refers to an existing directory.
-    ///
-    /// ```rust, ignore
-    /// assert_that(&PathBuf::from("/tmp/dir/")).is_a_directory();
-    /// ```
-    fn is_a_directory(&mut self) {
-        is_a_directory(self.subject.as_path(), self)
-    }
-
-    /// Asserts that the subject `PathBuf` has the expected file name.
-    /// ```rust, ignore
-    /// assert_that(&PathBuf::from("/tmp/file")).has_file_name(&"file");
-    /// ```
-    fn has_file_name<'r, E: Borrow<&'r str>>(&mut self, expected_file_name: E) {
-        has_file_name(self.subject.as_path(), expected_file_name.borrow(), self)
     }
 }
 
@@ -195,6 +149,13 @@ mod tests {
     use std::path::{Path, PathBuf};
 
     static MANIFEST_PATH: &str = env!("CARGO_MANIFEST_DIR");
+
+    #[test]
+    fn should_accept_any_path_reference() {
+        assert_that(&Path::new(MANIFEST_PATH)).exists();
+        assert_that(&PathBuf::from(MANIFEST_PATH)).exists();
+        assert_that(&MANIFEST_PATH).exists();
+    }
 
     #[test]
     pub fn should_not_panic_if_path_exists() {
