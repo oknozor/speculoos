@@ -18,12 +18,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-speculoos = "0.6.0"
-```
-
-Then add this to your crate:
-```rust
-extern crate speculoos;
+speculoos = "0.9.0"
 ```
 
 To quickly start using assertions, simply use the `prelude` module in your test module:
@@ -33,13 +28,13 @@ use speculoos::prelude::*;
 
 ## Overview
 
-Speculoos allows you to write your assertions in a fluent manner by seperating out what you are testing with, what you are testing against and how you are asserting.
+Speculoos allows you to write your assertions in a fluent manner by separating out what you are testing with, what you are testing against and how you are asserting.
 
 ### Simple asserts
 
 For example, to test that a produced value is equal to an expected value, you would write:
 ```rust
-assert_that(&1).is_equal_to(&1);
+assert_that(&1).is_equal_to(1);
 ```
 
 Or that a Vec contains a certain number of elements:
@@ -100,7 +95,7 @@ On failure, this will display:
 If you want to assert against a value contained within a struct, you can call `map(...)` with a closure, which will create a new `Spec` based upon the return value of the closure. You can then call any applicable assertions against the mapped value.
 ```rust
 let test_struct = TestStruct { value: 5 };
-assert_that(&test_struct).map(|val| &val.value).is_equal_to(&5);
+assert_that(&test_struct).map(|val| &val.value).is_equal_to(5);
 ```
 
 ## Macros
