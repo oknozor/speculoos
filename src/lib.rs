@@ -152,6 +152,7 @@ use colours::{TERM_BOLD, TERM_RED, TERM_RESET};
 
 pub mod boolean;
 pub mod hashmap;
+pub mod hashset;
 pub mod iter;
 pub mod numeric;
 pub mod option;

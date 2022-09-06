@@ -172,6 +172,13 @@ Note: Descriptions and examples for each of the assertions are further down in t
 #### contains_entry
 #### does_not_contain_entry
 
+### HashSets
+#### has_length
+#### is_empty
+#### contains (from iterator)
+#### does_not_contain (from iterator)
+#### contains_all_of (from iterator)
+
 ### IntoIterator/Iterator
 #### contains
 #### does_not_contain
@@ -777,6 +784,44 @@ assert_that(&test_map).does_not_contain_entry(&"hello", &"hey");
      but was: present in hashmap
 ```
 
+### HashSets
+#### has_length
+
+Asserts that the length of the subject hashset is equal to the provided length. The subject type must be of `HashSet`.
+
+##### Example
+```rust
+let mut test_map = HashSet::new();
+test_map.insert(1);
+test_map.insert(2);
+
+assert_that(&test_map).has_length(2);
+```
+
+##### Failure Message
+```bash
+	expected: hashset to have length <1>
+	 but was: <2>
+```
+
+#### is_empty
+
+Asserts that the subject hashset is empty. The subject type must be of `HashSet`.
+
+##### Example
+```rust
+let test_map: HashSet<u8> = HashSet::new();
+assert_that(&test_map).is_empty();
+```
+
+##### Failure Message
+```bash
+	expected: an empty hashset
+	 but was: a hashset with length <1>
+```
+
+#### Iterator based asserts
+Since a hashset is implements Iterator, all the Iterator assertions below also apply (e.g. contains & does_not_contain)
 
 ### IntoIterator/Iterator
 #### contains
