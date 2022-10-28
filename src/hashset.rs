@@ -63,7 +63,7 @@ mod tests {
     use std::collections::HashSet;
 
     #[test]
-    fn should_not_panic_if_HashSet_length_matches_expected() {
+    fn should_not_panic_if_hash_set_length_matches_expected() {
         let mut test_map = HashSet::new();
         test_map.insert(1);
         test_map.insert(2);
@@ -73,7 +73,7 @@ mod tests {
 
     #[test]
     #[should_panic(expected = "\n\texpected: HashSet to have length <1>\n\t but was: <2>")]
-    fn should_panic_if_HashSet_length_does_not_match_expected() {
+    fn should_panic_if_hash_set_length_does_not_match_expected() {
         let mut test_map = HashSet::new();
         test_map.insert(1);
         test_map.insert(2);
@@ -82,7 +82,7 @@ mod tests {
     }
 
     #[test]
-    fn should_not_panic_if_HashSet_was_expected_to_be_empty_and_is() {
+    fn should_not_panic_if_hash_set_was_expected_to_be_empty_and_is() {
         let test_map: HashSet<u8> = HashSet::new();
         assert_that(&test_map).is_empty();
     }
@@ -90,7 +90,7 @@ mod tests {
     #[test]
     #[should_panic(expected = "\n\texpected: an empty HashSet\
                    \n\t but was: a HashSet with length <1>")]
-    fn should_panic_if_HashSet_was_expected_to_be_empty_and_is_not() {
+    fn should_panic_if_hash_set_was_expected_to_be_empty_and_is_not() {
         let mut test_map = HashSet::new();
         test_map.insert(1);
 
@@ -108,7 +108,7 @@ mod tests {
     }
 
     #[test]
-    fn should_not_panic_if_HashSet_contains() {
+    fn should_not_panic_if_hash_set_contains() {
         let mut test_map = HashSet::new();
         test_map.insert("hello");
 
@@ -119,7 +119,7 @@ mod tests {
     // Unfortunately the order of the keys can change. Doesn't seem to make sense to sort them
     // just for the sake of checking the panic message.
     #[should_panic]
-    fn should_not_panic_if_HashSet_does_not_contain() {
+    fn should_not_panic_if_hash_set_does_not_contain() {
         let mut test_map = HashSet::new();
         test_map.insert("hi");
         test_map.insert("hey");
@@ -138,7 +138,7 @@ mod tests {
     }
 
     #[test]
-    fn should_not_panic_if_HashSet_does_not_contain_when_expected() {
+    fn should_not_panic_if_hash_set_does_not_contain_when_expected() {
         let mut test_map = HashSet::new();
         test_map.insert("hello");
 
@@ -148,7 +148,7 @@ mod tests {
     #[test]
     #[should_panic(expected = "\n\texpected: iterator to not contain <\"hello\">\
                    \n\t but was: <[\"hello\"]>")]
-    fn should_panic_if_HashSet_does_contain_when_not_expected() {
+    fn should_panic_if_hash_set_does_contain_when_not_expected() {
         let mut test_map = HashSet::new();
         test_map.insert("hello");
 

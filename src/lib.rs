@@ -466,7 +466,7 @@ where
     ///
     /// NOTE: The resultant panic message will only state the actual value. It's recommended that
     /// you write your own assertion rather than relying upon this.
-    /// 
+    ///
     /// `matches` returns &mut &Self, making it possible to chain multiple assertions.
     ///
     /// ```rust
@@ -483,7 +483,7 @@ where
             AssertionFailure::from_spec(self)
                 .fail_with_message(format!("expectation failed for value <{:?}>", subject));
         }
-        
+
         self
     }
 
@@ -665,7 +665,7 @@ mod tests {
         let value = "Hello";
         assert_that(&value).matches(|val| val.eq(&"Hi"));
     }
-    
+
     #[test]
     fn should_permit_chained_matches_calls() {
         let value = ("Hello", "World");
