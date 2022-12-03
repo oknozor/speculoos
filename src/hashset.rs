@@ -7,6 +7,7 @@ use std::hash::Hash;
 pub trait HashSetAssertions<'s> {
     fn has_length(&mut self, expected: usize);
     fn is_empty(&mut self);
+    fn is_not_empty(&mut self);
 }
 
 impl<'s, K> HashSetAssertions<'s> for Spec<'s, HashSet<K>>
@@ -54,6 +55,26 @@ where
                 .fail();
         }
     }
+
+    /// Asserts that the subject HashSet is not empty. The subject type must be of `HashSet`.
+    ///
+    /// ```rust
+    /// # use speculoos::prelude::*;
+    /// # use std::collections::HashSet;
+    /// let mut test_map: HashSet<u8> = HashSet::new();
+    /// test_map.insert(42);
+    /// assert_that(&test_map).is_not_empty();
+    /// ```
+    fn is_not_empty(&mut self) {
+        let subject = self.subject;
+
+        if subject.is_empty() {
+            AssertionFailure::from_spec(self)
+                .with_expected("an non empty HashSet".to_string())
+                .with_actual(format!("a HashSet with length <{:?}>", subject.len()))
+                .fail();
+        }
+    }
 }
 
 #[cfg(test)]
@@ -88,13 +109,28 @@ mod tests {
     }
 
     #[test]
+    fn should_not_panic_if_hash_set_was_expected_to_not_be_empty_and_is_not() {
+        let mut test_map: HashSet<u8> = HashSet::new();
+        test_map.insert(1);
+        assert_that(&test_map).is_not_empty();
+    }
+
+    #[test]
     #[should_panic(expected = "\n\texpected: an empty HashSet\
                    \n\t but was: a HashSet with length <1>")]
-    fn should_panic_if_hash_set_was_expected_to_be_empty_and_is_not() {
+    fn should_panic_if_hash_set_was_expected_to_not_be_empty_and_is() {
         let mut test_map = HashSet::new();
         test_map.insert(1);
 
         assert_that(&test_map).is_empty();
+    }
+
+    #[test]
+    #[should_panic(expected = "\n\texpected: an non empty HashSet\
+                   \n\t but was: a HashSet with length <0>")]
+    fn should_panic_if_hash_set_was_expected_to_be_empty_and_is_not() {
+        let test_map: HashSet<u8> = HashSet::new();
+        assert_that(&test_map).is_not_empty();
     }
 
     #[test]

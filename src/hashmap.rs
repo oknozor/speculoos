@@ -8,6 +8,7 @@ use std::hash::Hash;
 pub trait HashMapAssertions<'s> {
     fn has_length(&mut self, expected: usize);
     fn is_empty(&mut self);
+    fn is_not_empty(&mut self);
 }
 
 pub trait KeyHashMapAssertions<'s, K: Hash + Eq, V> {
@@ -66,6 +67,26 @@ where
         if !subject.is_empty() {
             AssertionFailure::from_spec(self)
                 .with_expected("an empty hashmap".to_string())
+                .with_actual(format!("a hashmap with length <{:?}>", subject.len()))
+                .fail();
+        }
+    }
+
+    /// Asserts that the subject hashmap is not empty. The subject type must be of `HashMap`.
+    ///
+    /// ```rust
+    /// # use speculoos::prelude::*;
+    /// # use std::collections::HashMap;
+    /// let mut test_map: HashMap<u8, u8> = HashMap::new();
+    /// test_map.insert(1, 2);
+    /// assert_that(&test_map).is_not_empty();
+    /// ```
+    fn is_not_empty(&mut self) {
+        let subject = self.subject;
+
+        if subject.is_empty() {
+            AssertionFailure::from_spec(self)
+                .with_expected("an non empty hashmap".to_string())
                 .with_actual(format!("a hashmap with length <{:?}>", subject.len()))
                 .fail();
         }
@@ -273,6 +294,13 @@ mod tests {
     }
 
     #[test]
+    fn should_not_panic_if_hashmap_was_expected_to_not_be_empty_and_is_not() {
+        let mut test_map: HashMap<u8, u8> = HashMap::new();
+        test_map.insert(1, 2);
+        assert_that(&test_map).is_not_empty();
+    }
+
+    #[test]
     #[should_panic(expected = "\n\texpected: an empty hashmap\
                    \n\t but was: a hashmap with length <1>")]
     fn should_panic_if_hashmap_was_expected_to_be_empty_and_is_not() {
@@ -280,6 +308,14 @@ mod tests {
         test_map.insert(1, 1);
 
         assert_that(&test_map).is_empty();
+    }
+
+    #[test]
+    #[should_panic(expected = "\n\texpected: an non empty hashmap\
+                   \n\t but was: a hashmap with length <0>")]
+    fn should_panic_if_hashmap_was_expected_to_not_be_empty_and_is() {
+        let test_map: HashMap<u8, u8> = HashMap::new();
+        assert_that(&test_map).is_not_empty();
     }
 
     #[test]
