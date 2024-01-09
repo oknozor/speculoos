@@ -86,8 +86,8 @@ where
 
         if subject.is_empty() {
             AssertionFailure::from_spec(self)
-                .with_expected("an non empty hashmap".to_string())
-                .with_actual(format!("a hashmap with length <{:?}>", subject.len()))
+                .with_expected("a non empty hashmap".to_string())
+                .with_actual("an empty hashmap".to_string())
                 .fail();
         }
     }
@@ -311,8 +311,8 @@ mod tests {
     }
 
     #[test]
-    #[should_panic(expected = "\n\texpected: an non empty hashmap\
-                   \n\t but was: a hashmap with length <0>")]
+    #[should_panic(expected = "\n\texpected: a non empty hashmap\
+                   \n\t but was: an empty hashmap")]
     fn should_panic_if_hashmap_was_expected_to_not_be_empty_and_is() {
         let test_map: HashMap<u8, u8> = HashMap::new();
         assert_that(&test_map).is_not_empty();
