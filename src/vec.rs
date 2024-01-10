@@ -54,8 +54,8 @@ impl<'s, T> VecAssertions for Spec<'s, Vec<T>> {
 
         if subject.is_empty() {
             AssertionFailure::from_spec(self)
-                .with_expected("an non empty vec".to_string())
-                .with_actual(format!("a vec with length {}", subject.len()))
+                .with_expected("a non empty vec".to_string())
+                .with_actual("an empty vec".to_string())
                 .fail();
         }
     }
