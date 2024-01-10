@@ -163,4 +163,27 @@ mod tests {
     fn should_panic_if_ref_vec_was_expected_to_be_empty_and_is_not() {
         assert_that(&&vec![1]).is_empty();
     }
+
+    #[test]
+    fn should_not_panic_if_vec_was_expected_to_be_not_empty_and_is() {
+        let test_vec: Vec<u8> = vec![1];
+        assert_that(&test_vec).is_not_empty();
+        assert_that(&&test_vec).is_not_empty();
+    }
+
+    #[test]
+    #[should_panic(expected = "\n\texpected: a non empty vec\
+                   \n\t but was: an empty vec")]
+    fn should_panic_if_vec_was_expected_to_be_not_empty_and_is_not() {
+        let test_vec: Vec<u8> = vec![];
+        assert_that(&test_vec).is_not_empty();
+    }
+
+    #[test]
+    #[should_panic(expected = "\n\texpected: a non empty vec\
+                   \n\t but was: an empty vec")]
+    fn should_panic_if_ref_vec_was_expected_to_be_not_empty_and_is_not() {
+        let test_vec: Vec<u8> = vec![];
+        assert_that(&&test_vec).is_not_empty();
+    }
 }
