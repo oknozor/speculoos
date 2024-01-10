@@ -340,7 +340,7 @@ mod tests {
     // Unfortunately the order of the keys can change. Doesn't seem to make sense to sort them
     // just for the sake of checking the panic message.
     #[should_panic]
-    fn should_not_panic_if_hashmap_does_not_contain_key() {
+    fn should_panic_if_hashmap_does_not_contain_key() {
         let mut test_map = HashMap::new();
         test_map.insert("hi", "hi");
         test_map.insert("hey", "hey");
