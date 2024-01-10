@@ -170,7 +170,7 @@ mod tests {
     }
 
     #[test]
-    fn should_not_panic_if_value_is_less_than_or_equal_to_than_expected() {
+    fn should_not_panic_if_value_is_less_than_or_equal_to_expected() {
         assert_that(&2).is_less_than_or_equal_to(&2);
         assert_that(&2).is_less_than_or_equal_to(&3);
     }
