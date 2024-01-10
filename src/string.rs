@@ -200,7 +200,7 @@ mod tests {
     }
 
     #[test]
-    fn should_not_panic_if_str_does_not_contains_value() {
+    fn should_not_panic_if_str_does_not_contain_value() {
         let value = "Hello";
         assert_that(&value).does_not_contain("x");
     }
