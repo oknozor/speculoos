@@ -155,7 +155,7 @@ mod tests {
     // Unfortunately the order of the keys can change. Doesn't seem to make sense to sort them
     // just for the sake of checking the panic message.
     #[should_panic]
-    fn should_not_panic_if_hash_set_does_not_contain() {
+    fn should_panic_if_hash_set_does_not_contain() {
         let mut test_map = HashSet::new();
         test_map.insert("hi");
         test_map.insert("hey");
