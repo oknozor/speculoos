@@ -9,7 +9,7 @@ pub trait VecAssertions {
     fn is_not_empty(&mut self);
 }
 
-impl<'s, T> VecAssertions for Spec<'s, Vec<T>> {
+impl<T> VecAssertions for Spec<'_, Vec<T>> {
     /// Asserts that the length of the subject vector is equal to the provided length. The subject
     /// type must be of `Vec`.
     ///

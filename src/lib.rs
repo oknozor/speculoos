@@ -46,6 +46,7 @@
 //! First, we'll create a new test with our `String`.
 //!
 //! ```rust
+//! # #[warn(clippy::test_attr_in_doctest)]
 //! #[test]
 //! pub fn should_be_the_correct_string() {
 //!     let subject = "Hello World!";
@@ -57,6 +58,7 @@
 //! something like this is easier to understand:
 //!
 //! ```rust
+//! # #[warn(clippy::test_attr_in_doctest)]
 //! #[test]
 //! pub fn should_return_false_if_condition_does_not_hold() {
 //!     // ...
@@ -66,6 +68,7 @@
 //! Rather than if you have a test like this:
 //!
 //! ```rust
+//! # #[warn(clippy::test_attr_in_doctest)]
 //! #[test]
 //! pub fn should_work() {
 //!     // ...
@@ -401,7 +404,7 @@ impl<'s, S> Spec<'s, S> {
     }
 }
 
-impl<'s, S> Spec<'s, S>
+impl<S> Spec<'_, S>
 where
     S: Debug + PartialEq,
 {
@@ -508,7 +511,7 @@ where
 
 #[cfg(test)]
 mod tests {
-
+    #![allow(clippy::needless_borrows_for_generic_args)]
     use super::prelude::*;
 
     #[test]

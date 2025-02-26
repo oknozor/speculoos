@@ -13,13 +13,13 @@ macro_rules! generate_iter_spec_trait {
             #[track_caller]
             fn contains<E: 's + Borrow<T>>(&mut self, expected_value: E);
             #[track_caller]
-            fn contains_all_of<E: 's>(&mut self, expected_values_iter: &'s E)
+            fn contains_all_of<E>(&mut self, expected_values_iter: &'s E)
             where
                 E: IntoIterator<Item = &'s T> + Clone;
             #[track_caller]
             fn does_not_contain<E: 's + Borrow<T>>(&mut self, expected_value: E);
             #[track_caller]
-            fn equals_iterator<E: 's>(&mut self, expected_iter: &'s E)
+            fn equals_iterator<E>(&mut self, expected_iter: &'s E)
             where
                 E: Iterator<Item = &'s T> + Clone;
         }
@@ -38,7 +38,7 @@ where
     where
         F: Fn(&'s T) -> bool;
     #[track_caller]
-    fn mapped_contains<F, M: 's>(&mut self, mapping_function: F, expected_value: &M)
+    fn mapped_contains<F, M>(&mut self, mapping_function: F, expected_value: &'s M)
     where
         M: Debug + PartialEq,
         F: Fn(&'s T) -> M;
@@ -70,7 +70,7 @@ where
     /// let test_vec = vec![1,2,3];
     /// assert_that(&test_vec).contains_all_of(&vec![&2, &3]);
     /// ```
-    fn contains_all_of<E: 's>(&mut self, expected_values_iter: &'s E)
+    fn contains_all_of<E>(&mut self, expected_values_iter: &'s E)
     where
         E: IntoIterator<Item = &'s T> + Clone,
     {
@@ -102,7 +102,7 @@ where
     /// let test_vec = vec![1,2,3];
     /// assert_that(&test_vec).equals_iterator(&expected_vec.iter());
     /// ```
-    fn equals_iterator<E: 's>(&mut self, expected_iter: &'s E)
+    fn equals_iterator<E>(&mut self, expected_iter: &'s E)
     where
         E: Iterator<Item = &'s T> + Clone,
     {
@@ -136,7 +136,7 @@ where
     /// # use speculoos::prelude::*;
     /// assert_that(&test_vec.iter()).contains_all_of(&vec![&2, &3]);
     /// ```
-    fn contains_all_of<E: 's>(&mut self, expected_values_iter: &'s E)
+    fn contains_all_of<E>(&mut self, expected_values_iter: &'s E)
     where
         E: IntoIterator<Item = &'s T> + Clone,
     {
@@ -168,7 +168,7 @@ where
     /// # use speculoos::prelude::*;
     /// assert_that(&test_vec.iter()).equals_iterator(&expected_vec.iter());
     /// ```
-    fn equals_iterator<E: 's>(&mut self, expected_iter: &'s E)
+    fn equals_iterator<E>(&mut self, expected_iter: &'s E)
     where
         E: Iterator<Item = &'s T> + Clone,
     {
@@ -236,7 +236,7 @@ where
     /// # use speculoos::prelude::*;
     /// assert_that(&vec![Simple { val: 1 }, Simple { val: 2 } ]).mapped_contains(|x| x.val, &2);
     /// ```
-    fn mapped_contains<F, M: 's>(&mut self, mapping_function: F, expected_value: &M)
+    fn mapped_contains<F, M>(&mut self, mapping_function: F, expected_value: &'s M)
     where
         M: Debug + PartialEq,
         F: Fn(&'s T) -> M,
@@ -252,13 +252,13 @@ where
     }
 }
 
-fn check_iterator_contains<'s, T, V: 's, I, E: Borrow<V>>(
+fn check_iterator_contains<'s, T, V, I, E: Borrow<V>>(
     spec: &mut Spec<T>,
     actual_iter: I,
     expected_value: E,
     should_contain: bool,
 ) where
-    V: PartialEq + Debug,
+    V: 's + PartialEq + Debug,
     I: Iterator<Item = &'s V>,
 {
     let borrowed_expected_value = expected_value.borrow();
@@ -411,11 +411,13 @@ fn panic_unmatched<T, E: Debug, A: Debug>(
 
 #[cfg(test)]
 mod tests {
+    #![allow(clippy::needless_borrows_for_generic_args)]
 
     use super::super::prelude::*;
     use std::collections::LinkedList;
 
     #[test]
+
     fn contains_should_allow_for_multiple_borrow_types_for_intoiter() {
         let test_vec = vec![1, 2, 3];
         assert_that(&test_vec).contains(2);
@@ -424,6 +426,7 @@ mod tests {
     }
 
     #[test]
+
     fn should_not_panic_if_vec_contains_value() {
         let test_vec = vec![1, 2, 3];
         assert_that(&test_vec).contains(&2);
@@ -437,6 +440,7 @@ mod tests {
     }
 
     #[test]
+
     fn should_not_panic_if_vec_does_not_contain_value_if_expected() {
         let test_vec = vec![1, 2, 3];
         assert_that(&test_vec).does_not_contain(&4);
@@ -450,6 +454,7 @@ mod tests {
     }
 
     #[test]
+
     fn should_not_panic_if_iterable_contains_value() {
         let mut test_into_iter = LinkedList::new();
         test_into_iter.push_back(1);
@@ -493,12 +498,14 @@ mod tests {
     }
 
     #[test]
+    #[allow(clippy::useless_vec)]
     fn should_not_panic_if_iterator_contains_all_expected_values() {
         let test_vec = vec![1, 2, 3];
         assert_that(&test_vec.iter()).contains_all_of(&vec![&2, &3]);
     }
 
     #[test]
+    #[allow(clippy::useless_vec)]
     #[should_panic(expected = "\n\texpected: iterator to contain items <[1, 6]>\
                    \n\t but was: <[1, 2, 3]>")]
     fn should_panic_if_iterator_does_not_contain_all_expected_values() {
@@ -507,6 +514,7 @@ mod tests {
     }
 
     #[test]
+    #[allow(clippy::useless_vec)]
     #[should_panic(expected = "\n\texpected: iterator to contain items <[1, 3, 1]>\
                    \n\t but was: <[1, 2, 3]>")]
     fn should_panic_if_iterator_does_not_contain_all_expected_values_exactly() {
@@ -515,6 +523,7 @@ mod tests {
     }
 
     #[test]
+    #[allow(clippy::useless_vec)]
     fn should_not_panic_if_iteratable_equals_expected_iterator() {
         let expected_vec = vec![1, 2, 3];
         let test_vec = vec![1, 2, 3];
@@ -523,6 +532,7 @@ mod tests {
     }
 
     #[test]
+    #[allow(clippy::useless_vec)]
     #[should_panic(expected = "\n\texpected: Iterator item of <4> (read <[1, 2]>)\
                    \n\t but was: Iterator item of <3> (read <[1, 2]>)")]
     fn should_panic_if_iteratable_does_not_equal_expected_iterator() {
@@ -533,6 +543,7 @@ mod tests {
     }
 
     #[test]
+    #[allow(clippy::useless_vec)]
     fn contains_should_allow_for_multiple_borrow_types_for_iterators() {
         let test_vec = vec![1, 2, 3];
         assert_that(&test_vec.iter()).contains(2);
@@ -541,12 +552,14 @@ mod tests {
     }
 
     #[test]
+    #[allow(clippy::useless_vec)]
     fn should_not_panic_if_iterator_contains_value() {
         let test_vec = vec![1, 2, 3];
         assert_that(&test_vec.iter()).contains(&2);
     }
 
     #[test]
+    #[allow(clippy::useless_vec)]
     #[should_panic(expected = "\n\texpected: iterator to contain <5>\n\t but was: <[1, 2, 3]>")]
     fn should_panic_if_iterator_does_not_contain_value() {
         let test_vec = vec![1, 2, 3];
@@ -554,12 +567,14 @@ mod tests {
     }
 
     #[test]
+    #[allow(clippy::useless_vec)]
     fn should_not_panic_if_iterator_does_not_contain_value_if_expected() {
         let test_vec = vec![1, 2, 3];
         assert_that(&test_vec.iter()).does_not_contain(&4);
     }
 
     #[test]
+    #[allow(clippy::useless_vec)]
     #[should_panic(expected = "\n\texpected: iterator to not contain <2>\n\t but was: <[1, 2, 3]>")]
     fn should_panic_if_iterator_does_contain_value_but_expected_not_to() {
         let test_vec = vec![1, 2, 3];
@@ -567,6 +582,7 @@ mod tests {
     }
 
     #[test]
+    #[allow(clippy::useless_vec)]
     fn should_not_panic_if_iterator_equals_expected_iterator() {
         let expected_vec = vec![1, 2, 3];
         let test_vec = vec![1, 2, 3];
@@ -575,6 +591,7 @@ mod tests {
     }
 
     #[test]
+    #[allow(clippy::useless_vec)]
     #[should_panic(expected = "\n\texpected: Iterator item of <4> (read <[1, 2]>)\
                    \n\t but was: Iterator item of <3> (read <[1, 2]>)")]
     fn should_panic_if_iterator_does_not_equal_expected_iterator() {
@@ -591,10 +608,7 @@ mod tests {
         test_into_iter.push_back(TestEnum::Good);
         test_into_iter.push_back(TestEnum::Bad);
 
-        assert_that(&test_into_iter).matching_contains(|val| match val {
-            &TestEnum::Good => true,
-            _ => false,
-        });
+        assert_that(&test_into_iter).matching_contains(|val| matches!(val, &TestEnum::Good));
     }
 
     #[test]
@@ -605,10 +619,7 @@ mod tests {
         test_into_iter.push_back(TestEnum::Bad);
         test_into_iter.push_back(TestEnum::Bad);
 
-        assert_that(&test_into_iter).matching_contains(|val| match val {
-            &TestEnum::Good => true,
-            _ => false,
-        });
+        assert_that(&test_into_iter).matching_contains(|val| matches!(val, &TestEnum::Good));
     }
 
     #[test]
