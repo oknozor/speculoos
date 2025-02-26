@@ -11,9 +11,13 @@ pub trait OrderedAssertions<T>
 where
     T: Debug + PartialOrd,
 {
+    #[track_caller]
     fn is_less_than<E: Borrow<T>>(&mut self, other: E);
+    #[track_caller]
     fn is_less_than_or_equal_to<E: Borrow<T>>(&mut self, other: E);
+    #[track_caller]
     fn is_greater_than<E: Borrow<T>>(&mut self, other: E);
+    #[track_caller]
     fn is_greater_than_or_equal_to<E: Borrow<T>>(&mut self, other: E);
 }
 
@@ -106,6 +110,7 @@ where
 
 #[cfg(feature = "num")]
 pub trait FloatAssertions<T: Float> {
+    #[track_caller]
     fn is_close_to<E: Borrow<T>, O: Borrow<T>>(&mut self, expected: E, tolerance: O);
 }
 

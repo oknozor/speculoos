@@ -3,10 +3,15 @@ use super::{AssertionFailure, DescriptiveSpec, Spec};
 use std::borrow::Borrow;
 
 pub trait StrAssertions<T> {
+    #[track_caller]
     fn starts_with<E: AsRef<str>>(&mut self, expected: E);
+    #[track_caller]
     fn ends_with<E: AsRef<str>>(&mut self, expected: E);
+    #[track_caller]
     fn contains<E: AsRef<str>>(&mut self, expected: E);
+    #[track_caller]
     fn does_not_contain<E: AsRef<str>>(&mut self, expected: E);
+    #[track_caller]
     fn is_empty(&mut self);
 }
 

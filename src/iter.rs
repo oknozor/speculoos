@@ -10,11 +10,15 @@ macro_rules! generate_iter_spec_trait {
         where
             T: Debug + PartialEq,
         {
+            #[track_caller]
             fn contains<E: 's + Borrow<T>>(&mut self, expected_value: E);
+            #[track_caller]
             fn contains_all_of<E: 's>(&mut self, expected_values_iter: &'s E)
             where
                 E: IntoIterator<Item = &'s T> + Clone;
+            #[track_caller]
             fn does_not_contain<E: 's + Borrow<T>>(&mut self, expected_value: E);
+            #[track_caller]
             fn equals_iterator<E: 's>(&mut self, expected_iter: &'s E)
             where
                 E: Iterator<Item = &'s T> + Clone;
@@ -29,9 +33,11 @@ pub trait MappingIterAssertions<'s, T: 's>
 where
     T: Debug,
 {
+    #[track_caller]
     fn matching_contains<F>(&mut self, matcher: F)
     where
         F: Fn(&'s T) -> bool;
+    #[track_caller]
     fn mapped_contains<F, M: 's>(&mut self, mapping_function: F, expected_value: &M)
     where
         M: Debug + PartialEq,
