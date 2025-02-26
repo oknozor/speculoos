@@ -16,20 +16,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! speculoos = "0.6.0"
-//! ```
-//!
-//! Then add this to your crate:
-//!
-//! ```rust
-//! extern crate speculoos;
-//! ```
-//!
-//! If you want macro support, include `#[macro_use]` to the declaration:
-//!
-//! ```rust, ignore
-//! #[macro_use]
-//! extern crate speculoos;
+//! speculoos = "0.12.0"
 //! ```
 //!
 //! To quickly start using assertions, `use` the prelude module:
@@ -136,8 +123,10 @@
 //! failures:
 //!
 //! ---- should_be_the_correct_string stdout ----
-//!     thread 'should_be_the_correct_string' panicked at 'expected string starting with <"H"> but
-//!     was <"ello World!">', src/lib.rs:204
+//!     thread 'should_be_the_correct_string' panicked at src/lib.rs:204
+//!
+//!     expected string starting with <"H">
+//!      but was <"ello World!">'
 //! ```
 //!
 //! Great! So we've just encountered a failing test. This particular case is quite easy to fix up
@@ -184,6 +173,7 @@ mod colours {
 #[cfg(feature = "num")]
 extern crate num;
 
+/// This macro is no longer needed. Just use assert_that() function directly.
 #[macro_export]
 macro_rules! assert_that {
     (&$subject:tt) => {
@@ -200,6 +190,7 @@ macro_rules! assert_that {
     }};
 }
 
+/// This macro is no longer needed. Just use asserting() function directly.
 #[macro_export]
 macro_rules! asserting {
     (&$description:tt) => {
