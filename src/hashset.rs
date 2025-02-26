@@ -5,8 +5,11 @@ use std::fmt::Debug;
 use std::hash::Hash;
 
 pub trait HashSetAssertions<'s> {
+    #[track_caller]
     fn has_length(&mut self, expected: usize);
+    #[track_caller]
     fn is_empty(&mut self);
+    #[track_caller]
     fn is_not_empty(&mut self);
 }
 

@@ -4,10 +4,15 @@ use std::borrow::Borrow;
 use std::path::Path;
 
 pub trait PathAssertions {
+    #[track_caller]
     fn exists(&mut self);
+    #[track_caller]
     fn does_not_exist(&mut self);
+    #[track_caller]
     fn is_a_file(&mut self);
+    #[track_caller]
     fn is_a_directory(&mut self);
+    #[track_caller]
     fn has_file_name<'r, E: Borrow<&'r str>>(&mut self, expected_file_name: E);
 }
 

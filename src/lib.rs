@@ -327,6 +327,7 @@ impl<'r, T: DescriptiveSpec<'r>> AssertionFailure<'r, T> {
 
     /// Builds the failure message with a description (if present), the expected value,
     /// and the actual value and then calls `panic` with the created message.
+    #[track_caller]
     pub fn fail(&mut self) {
         assert!(
             !(self.expected.is_none() || self.actual.is_none()),
@@ -351,6 +352,7 @@ impl<'r, T: DescriptiveSpec<'r>> AssertionFailure<'r, T> {
 
     /// Calls `panic` with the provided message, prepending the assertion description
     /// if present.
+    #[track_caller]
     fn fail_with_message(&mut self, message: String) {
         let location = self.maybe_build_location();
         let subject_name = self.maybe_build_subject_name();
@@ -416,6 +418,7 @@ where
     /// # use speculoos::prelude::*;
     /// assert_that(&"hello").is_equal_to(&"hello");
     /// ```
+    #[track_caller]
     pub fn is_equal_to<E: Borrow<S>>(&mut self, expected: E) {
         let subject = self.subject;
         let borrowed_expected = expected.borrow();
@@ -435,6 +438,7 @@ where
     /// # use speculoos::prelude::*;
     /// assert_that(&"hello").is_not_equal_to(&"olleh");
     /// ```
+    #[track_caller]
     pub fn is_not_equal_to<E: Borrow<S>>(&mut self, expected: E) {
         let subject = self.subject;
         let borrowed_expected = expected.borrow();
@@ -467,6 +471,7 @@ where
     /// # use speculoos::prelude::*;
     /// assert_that(&"hello").matches(|x| x.eq(&"hello"));
     /// ```
+    #[track_caller]
     pub fn matches<F>(&mut self, matching_function: F) -> &mut Self
     where
         F: Fn(&'s S) -> bool,
@@ -493,6 +498,7 @@ where
     /// let test_struct = TestStruct { value: 5 };
     /// assert_that(&test_struct).map(|val| &val.value).is_equal_to(&5);
     /// ```
+    #[track_caller]
     pub fn map<F, T>(self, mapping_function: F) -> Spec<'s, T>
     where
         F: Fn(&'s S) -> &'s T,

@@ -8,7 +8,9 @@ pub trait OptionAssertions<'r, T>
 where
     T: Debug,
 {
+    #[track_caller]
     fn is_some(&mut self) -> Spec<'r, T>;
+    #[track_caller]
     fn is_none(&mut self);
 }
 
@@ -16,6 +18,7 @@ pub trait ContainingOptionAssertions<T>
 where
     T: Debug + PartialEq,
 {
+    #[track_caller]
     fn contains_value<E: Borrow<T>>(&mut self, expected_value: E);
 }
 

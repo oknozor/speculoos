@@ -6,18 +6,25 @@ use std::fmt::Debug;
 use std::hash::Hash;
 
 pub trait HashMapAssertions<'s> {
+    #[track_caller]
     fn has_length(&mut self, expected: usize);
+    #[track_caller]
     fn is_empty(&mut self);
+    #[track_caller]
     fn is_not_empty(&mut self);
 }
 
 pub trait KeyHashMapAssertions<'s, K: Hash + Eq, V> {
+    #[track_caller]
     fn contains_key<E: Borrow<K>>(&mut self, expected_key: E) -> Spec<'s, V>;
+    #[track_caller]
     fn does_not_contain_key<E: Borrow<K>>(&mut self, expected_key: E);
 }
 
 pub trait EntryHashMapAssertions<'s, K: Hash + Eq, V: PartialEq> {
+    #[track_caller]
     fn contains_entry<E: Borrow<K>, F: Borrow<V>>(&mut self, expected_key: E, expected_value: F);
+    #[track_caller]
     fn does_not_contain_entry<E: Borrow<K>, F: Borrow<V>>(
         &mut self,
         expected_key: E,

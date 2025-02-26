@@ -1,7 +1,9 @@
 use super::{AssertionFailure, Spec};
 
 pub trait BooleanAssertions {
+    #[track_caller]
     fn is_true(&mut self);
+    #[track_caller]
     fn is_false(&mut self);
 }
 

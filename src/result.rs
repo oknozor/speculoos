@@ -8,7 +8,9 @@ where
     T: Debug,
     E: Debug,
 {
+    #[track_caller]
     fn is_ok(&mut self) -> Spec<'s, T>;
+    #[track_caller]
     fn is_err(&mut self) -> Spec<'s, E>;
 }
 
@@ -17,9 +19,11 @@ where
     T: Debug,
     E: Debug,
 {
+    #[track_caller]
     fn is_ok_containing<V: Borrow<T>>(&mut self, expected_value: V)
     where
         T: PartialEq;
+    #[track_caller]
     fn is_err_containing<V: Borrow<E>>(&mut self, expected_value: V)
     where
         E: PartialEq;
