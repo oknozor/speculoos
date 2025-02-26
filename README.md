@@ -1,8 +1,9 @@
-This is a fork the unmaintained  crate [spectral](https://github.com/cfrancia/spectral). 
+This is a fork the unmaintained crate [spectral](https://github.com/cfrancia/spectral).
 Spectral as not changed for five years and yet is still very usable, the goal of this fork
 is to add new assertion capabilities without breaking the existing API.
 
 # speculoos
+
 ![Crates.io](https://img.shields.io/crates/v/speculoos?style=plastic)
 [![CI](https://github.com/oknozor/speculoos/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/oknozor/speculoos/actions/workflows/CI.yml)
 [![codecov](https://codecov.io/gh/oknozor/speculoos/branch/main/graph/badge.svg?token=MZ45HO00YE)](https://codecov.io/gh/oknozor/speculoos)
@@ -18,72 +19,72 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-speculoos = "0.9.0"
+speculoos = "0.12.0"
 ```
 
 To quickly start using assertions, simply use the `prelude` module in your test module:
+
 ```rust
 use speculoos::prelude::*;
 ```
 
 ## Overview
 
-Speculoos allows you to write your assertions in a fluent manner by separating out what you are testing with, what you are testing against and how you are asserting.
+Speculoos allows you to write your assertions in a fluent manner by separating out what you are testing with, what you
+are testing against and how you are asserting.
 
 ### Simple asserts
 
 For example, to test that a produced value is equal to an expected value, you would write:
+
 ```rust
-assert_that(&1).is_equal_to(1);
+assert_that( & 1).is_equal_to(1);
 ```
 
 Or that a Vec contains a certain number of elements:
+
 ```rust
-let test_vec = vec![1,2,3];
-assert_that(&test_vec).has_length(3);
+let test_vec = vec![1, 2, 3];
+assert_that( & test_vec).has_length(3);
 ```
 
-The methods avaliable for asserting depend upon the type under test and what traits are implemented.
-
-As described below, it's recommended to use the macro form of `assert_that!` to provide correct file and line numbers for failing assertions.
+The methods available for asserting depend upon the type under test and what traits are implemented.
 
 ### Failure messages
 
 For failing assertions, the usual panic message follows the following format:
+
 ```
     expected: <2>
      but was: <1>
 ```
 
-To add additional clarification to the panic message, you can also deliberately state what you are asserting by calling the `asserting(...)` function rather than `assert_that(...)`:
+To add additional clarification to the panic message, you can also deliberately state what you are asserting by calling
+the `asserting(...)` function rather than `assert_that(...)`:
+
 ```rust
-asserting(&"test condition").that(&1).is_equal_to(&2);
+asserting( & "test condition").that( & 1).is_equal_to( & 2);
 ```
 
 Which will produce:
+
 ```
     test condition:
     expected: <2>
      but was: <1>
 ```
 
-Using the macro form of `assert_that!` will provide you with the file and line of the failing assertion as well:
-```
-    expected: vec to have length <2>
-     but was: <1>
-
-    at location: tests/parser.rs:112
-```
-
 ### Named Subjects
 
-To make it more obvious what your subject actually is, you can call `.named(...)` after `assert_that` (or `asserting(...).that(...)`), which will print out the provided `&str` as the subject name if the assertion fails.
+To make it more obvious what your subject actually is, you can call `.named(...)` after `assert_that` (or
+`asserting(...).that(...)`), which will print out the provided `&str` as the subject name if the assertion fails.
 
 ```
 assert_that(&thing.attributes).named(&"thing attributes").has_length(2);
 ```
 
 On failure, this will display:
+
 ```
     for subject [thing attributes]
     expected: vec to have length <2>
@@ -92,123 +93,165 @@ On failure, this will display:
 
 ### Mapping values
 
-If you want to assert against a value contained within a struct, you can call `map(...)` with a closure, which will create a new `Spec` based upon the return value of the closure. You can then call any applicable assertions against the mapped value.
+If you want to assert against a value contained within a struct, you can call `map(...)` with a closure, which will
+create a new `Spec` based upon the return value of the closure. You can then call any applicable assertions against the
+mapped value.
+
 ```rust
 let test_struct = TestStruct { value: 5 };
-assert_that(&test_struct).map(|val| &val.value).is_equal_to(5);
+assert_that( & test_struct).map( | val| & val.value).is_equal_to(5);
 ```
 
 ## Macros
 
-If you add `#[macro_use]` to the `extern crate` declaration, you can also use the macro form of `assert_that` and `asserting`.
-
-```rust
-assert_that!(test_vec).has_length(5)
-```
-
-This allows you to pass through a subject to test without needing to deliberately turn it into a reference. However, for consistency, you can also use a deliberate reference in the macro as well.
-
-```rust
-assert_that!(&test_vec).has_length(5)
-```
-
-Additionally, this will provide you with the file and line number of the failing assertion (rather than just the internal speculoos panic location).
+The macros are no longer needed as the line number is correctly passed through for the assertions.
 
 ## Assertions (Basic)
 
 Note: Descriptions and examples for each of the assertions are further down in this readme.
 
 ### General
+
 #### is_equal_to
+
 #### is_not_equal_to
+
 #### matches
 
 ### Booleans
+
 #### is_true
+
 #### is_false
 
 ### Numbers
+
 #### is_less_than
+
 #### is_less_than_or_equal_to
+
 #### is_greater_than
+
 #### is_greater_than_or_equal_to
 
 ### Floats (optional)
+
 #### is_close_to
 
 ### Options
+
 #### is_some -> (returns a new Spec with the Option value)
+
 #### is_none
+
 #### contains_value
 
 ### Paths
+
 #### exists
+
 #### does_not_exist
+
 #### is_a_file
+
 #### is_a_directory
+
 #### has_file_name
 
 ### Results
+
 #### is_ok -> (returns a new Spec with the Ok value)
+
 #### is_err -> (returns a new Spec with the Err value)
+
 #### is_ok_containing
+
 #### is_err_containing
 
 ### Strings
+
 #### starts_with
+
 #### ends_with
+
 #### contains
+
 #### is_empty
 
 ### Vectors
+
 #### has_length
+
 #### is_empty
 
 ### HashMaps
+
 #### has_length
+
 #### is_empty
+
 #### contains_key -> (returns a new Spec with the key value)
+
 #### does_not_contain_key
+
 #### contains_entry
+
 #### does_not_contain_entry
 
 ### HashSets
+
 #### has_length
+
 #### is_empty
+
 #### contains (from iterator)
+
 #### does_not_contain (from iterator)
+
 #### contains_all_of (from iterator)
 
 ### IntoIterator/Iterator
+
 #### contains
+
 #### does_not_contain
+
 #### contains_all_of
+
 #### mapped_contains
+
 #### equals_iterator
 
 ### IntoIterator
+
 #### matching_contains
 
 ## Optional Features
 
 ### Num Crate
-The `num` crate is used for `Float` assertions. This feature will be enabled by default, but if you don't want the dependency on `num`, then simply disable it.
+
+The `num` crate is used for `Float` assertions. This feature will be enabled by default, but if you don't want the
+dependency on `num`, then simply disable it.
 
 ## Assertions (Detailed)
 
-As a general note, any type under test will usually need to implement at least `Debug`. Other assertions will have varying bounds attached to them.
+As a general note, any type under test will usually need to implement at least `Debug`. Other assertions will have
+varying bounds attached to them.
 
 ### General
+
 #### is_equal_to
 
 Asserts that the subject and the expected value are equal. The subject type must implement `PartialEq`.
 
 ##### Example
+
 ```rust
-assert_that(&"hello").is_equal_to(&"hello");
+assert_that( & "hello").is_equal_to( & "hello");
 ```
 
 ##### Failure Message
+
 ```bash
 	expected: <2>
 	 but was: <1>
@@ -219,42 +262,51 @@ assert_that(&"hello").is_equal_to(&"hello");
 Asserts that the subject and the expected value are not equal. The subject type must implement `PartialEq`.
 
 ##### Example
+
 ```rust
-assert_that(&"hello").is_not_equal_to(&"hello");
+assert_that( & "hello").is_not_equal_to( & "hello");
 ```
 
 ##### Failure Message
+
 ```bash
 	expected: <1> not equal to <1>
 	 but was: equal
 ```
 
 #### matches
+
 Accepts a function accepting the subject type which returns a bool. Returning false will cause the assertion to fail.
 
-NOTE: The resultant panic message will only state the actual value. It's recommended that you write your own assertions rather than relying upon this.
+NOTE: The resultant panic message will only state the actual value. It's recommended that you write your own assertions
+rather than relying upon this.
 
 ##### Example
+
 ```rust
-assert_that(&"Hello").matches(|val| val.eq(&"Hello"));
+assert_that( & "Hello").matches( | val| val.eq( & "Hello"));
 ```
 
 ##### Failure Message
+
 ```bash
 	expectation failed for value <"Hello">
 ```
 
 ### Booleans
+
 #### is_true
 
 Asserts that the subject is true. The subject type must be `bool`.
 
 ##### Example
+
 ```rust
-assert_that(&true).is_true(); 
+assert_that( & true).is_true(); 
 ```
 
 ##### Failure Message
+
 ```bash
 	expected: bool to be <true>
 	 but was: <false>
@@ -265,27 +317,32 @@ assert_that(&true).is_true();
 Asserts that the subject is false. The subject type must be `bool`.
 
 ##### Example
+
 ```rust
-assert_that(&false).is_false();
+assert_that( & false).is_false();
 ```
 
 ##### Failure Message
+
 ```bash
 	expected: bool to be <false>
 	 but was: <true>
 ```
 
 ### Numbers
+
 #### is_less_than
 
 Asserts that the subject value is less than the expected value. The subject type must implement `PartialOrd`.
 
 ##### Example
+
 ```rust
-assert_that(&1).is_less_than(&2);
+assert_that( & 1).is_less_than( & 2);
 ```
 
 ##### Failure Message
+
 ```bash
 	expected: value less than <2>
 	 but was: <3>
@@ -296,11 +353,13 @@ assert_that(&1).is_less_than(&2);
 Asserts that the subject is less than or equal to the expected value. The subject type must implement `PartialOrd`.
 
 ##### Example
+
 ```rust
-assert_that(&2).is_less_than_or_equal_to(&2);
+assert_that( & 2).is_less_than_or_equal_to( & 2);
 ```
 
 ##### Failure Message
+
 ```bash
 	expected: value less than or equal to <2>
 	 but was: <3>
@@ -311,11 +370,13 @@ assert_that(&2).is_less_than_or_equal_to(&2);
 Asserts that the subject is greater than the expected value. The subject type must implement `PartialOrd`.
 
 ##### Example
+
 ```rust
-assert_that(&2).is_greater_than(&1);
+assert_that( & 2).is_greater_than( & 1);
 ```
 
 ##### Failure Message
+
 ```bash
 	expected: value greater than <3>
 	 but was: <2>
@@ -326,33 +387,40 @@ assert_that(&2).is_greater_than(&1);
 Asserts that the subject is greater than or equal to the expected value. The subject type must implement `PartialOrd`.
 
 ##### Example
+
 ```rust
-assert_that(&2).is_greater_than_or_equal_to(&1); 
+assert_that( & 2).is_greater_than_or_equal_to( & 1); 
 ```
 
 ##### Failure Message
+
 ```bash
 	expected: value greater than or equal to <3>
 	 but was: <2>
 ```
 
 ### Floats (optional)
+
 #### is_close_to
 
-Asserts that the subject is close to the expected value by the specified tolerance. The subject type must implement `Float` and `Debug`.
+Asserts that the subject is close to the expected value by the specified tolerance. The subject type must implement
+`Float` and `Debug`.
 
 ##### Example
+
 ```rust
-assert_that(&2.0f64).is_close_to(2.0f64, 0.01f64);
+assert_that( & 2.0f64).is_close_to(2.0f64, 0.01f64);
 ```
 
 ##### Failure Message
+
 ```bash
 	expected: float close to <1> (tolerance of <0.01>)
 	 but was: <2>
 ```
 
 ### Options
+
 #### is_some -> (returns a new Spec with the Option value)
 
 Asserts that the subject is `Some`. The subject type must be an `Option`.
@@ -360,16 +428,19 @@ Asserts that the subject is `Some`. The subject type must be an `Option`.
 This will return a new `Spec` containing the unwrapped value if it is `Some`.
 
 ##### Example
+
 ```rust
-assert_that(&Some(1)).is_some();
+assert_that( & Some(1)).is_some();
 ```
 
 ##### Chaining
+
 ```rust
-assert_that(&option).is_some().is_equal_to(&"Hello");
+assert_that( & option).is_some().is_equal_to( & "Hello");
 ```
 
 ##### Failure Message
+
 ```bash
 	expected: option[some]
 	 but was: option[none]
@@ -380,11 +451,13 @@ assert_that(&option).is_some().is_equal_to(&"Hello");
 Asserts that the subject is `None`. The value type must be an `Option`.
 
 ##### Example
+
 ```rust
-assert_that(&Option::None::<String>).is_none();
+assert_that( & Option::None::<String>).is_none();
 ```
 
 ##### Failure Message
+
 ```bash
 	expected: option[none]
 	 but was: option<"Hello">
@@ -395,28 +468,32 @@ assert_that(&Option::None::<String>).is_none();
 Asserts that the subject is a `Some` containing the expected value. The subject type must be an `Option`.
 
 ##### Example
+
 ```rust
-assert_that(&Some(1)).contains_value(&1);
+assert_that( & Some(1)).contains_value( & 1);
 ```
 
 ##### Failure Message
+
 ```bash
 	expected: option to contain <"Hi">
 	 but was: <"Hello">
 ```
 
-
 ### Paths
+
 #### exists
 
 Asserts that the subject `Path` or `PathBuf` refers to an existing location.
 
 ##### Example
+
 ```rust
-assert_that(&Path::new("/tmp/file")).exists();
+assert_that( & Path::new("/tmp/file")).exists();
 ```
 
 ##### Failure Message
+
 ```bash
 	expected: Path of <"/tmp/file"> to exist
 	 but was: a non-existent Path
@@ -427,11 +504,13 @@ assert_that(&Path::new("/tmp/file")).exists();
 Asserts that the subject `Path` or `PathBuf` does not refer to an existing location.
 
 ##### Example
+
 ```rust
-assert_that(&Path::new("/tmp/file")).does_not_exist();
+assert_that( & Path::new("/tmp/file")).does_not_exist();
 ```
 
 ##### Failure Message
+
 ```bash
 	expected: Path of <"/tmp/file"> to not exist
      but was: a resolvable Path
@@ -442,11 +521,13 @@ assert_that(&Path::new("/tmp/file")).does_not_exist();
 Asserts that the subject `Path` or `PathBuf` refers to an existing file.
 
 ##### Example
+
 ```rust
-assert_that(&Path::new("/tmp/file")).is_a_file();
+assert_that( & Path::new("/tmp/file")).is_a_file();
 ```
 
 ##### Failure Message
+
 ```bash
 	expected: Path of <"/tmp/file"> to be a file
 	 but was: not a resolvable file
@@ -457,11 +538,13 @@ assert_that(&Path::new("/tmp/file")).is_a_file();
 Asserts that the subject `Path` or `PathBuf` refers to an existing directory.
 
 ##### Example
+
 ```rust
-assert_that(&Path::new("/tmp/dir/")).is_a_directory();
+assert_that( & Path::new("/tmp/dir/")).is_a_directory();
 ```
 
 ##### Failure Message
+
 ```bash
 	expected: Path of <"/tmp/dir/"> to be a directory
 	 but was: not a resolvable directory
@@ -472,36 +555,41 @@ assert_that(&Path::new("/tmp/dir/")).is_a_directory();
 Asserts that the subject `Path` or `PathBuf` has the expected file name.
 
 ##### Example
+
 ```rust
-assert_that(&Path::new("/tmp/file")).has_file_name(&"file");
+assert_that( & Path::new("/tmp/file")).has_file_name( & "file");
 ```
 
 ##### Failure Message
+
 ```bash
 	expected: Path with file name of <pom.xml>
 	 but was: <Cargo.toml>
 ```
 
-
 ### Results
+
 #### is_ok -> (returns a new Spec with the Ok value)
 
 Asserts that the subject is `Ok`. The value type must be a `Result`.
-    
+
 This will return a new `Spec` containing the unwrapped value if it is `Ok`.
 
 ##### Example
+
 ```rust
-assert_that(&Result::Ok::<usize, usize>(1)).is_ok();
+assert_that( & Result::Ok::<usize, usize>(1)).is_ok();
 ```
 
 ##### Chaining
+
 ```rust
-let result: Result<&str, &str> = Ok("Hello");
-assert_that(&result).is_ok().is_equal_to(&"Hello");
+let result: Result< & str, & str> = Ok("Hello");
+assert_that( & result).is_ok().is_equal_to( & "Hello");
 ```
 
 ##### Failure Message
+
 ```bash
 	expected: result[ok]
 	 but was: result[error]<"Oh no">
@@ -516,17 +604,20 @@ This will return a new `Spec` containing the unwrapped value if it is `Err`.
 Note: This used to be called `is_error`, but has been renamed to match standard Rust naming.
 
 ##### Example
+
 ```rust
-assert_that(&Result::Err::<usize, usize>(1)).is_err();
+assert_that( & Result::Err::<usize, usize>(1)).is_err();
 ```
 
 ##### Chaining
+
 ```rust
-let result: Result<&str, &str> = Err("Hello");
-assert_that(&result).is_err().is_equal_to(&"Hello");
+let result: Result< & str, & str> = Err("Hello");
+assert_that( & result).is_err().is_equal_to( & "Hello");
 ```
 
 ##### Failure Message
+
 ```bash
 	expected: result[error]
 	 but was: result[ok]<"Hello">
@@ -537,11 +628,13 @@ assert_that(&result).is_err().is_equal_to(&"Hello");
 Asserts that the subject is an `Ok` Result containing the expected value. The subject type must be a `Result`.
 
 ##### Example
+
 ```rust
-assert_that(&Result::Ok::<usize, usize>(1)).is_ok_containing(&1);
+assert_that( & Result::Ok::<usize, usize>(1)).is_ok_containing( & 1);
 ```
 
 ##### Failure Message
+
 ```bash
 	expected: Result[ok] containing <"Hi">
 	 but was: Result[ok] containing <"Hello">
@@ -552,28 +645,32 @@ assert_that(&Result::Ok::<usize, usize>(1)).is_ok_containing(&1);
 Asserts that the subject is an `Err` Result containing the expected value. The subject type must be a `Result`.
 
 ##### Example
+
 ```rust
-assert_that(&Result::Err::<usize, usize>(1)).is_err_containing(&1);
+assert_that( & Result::Err::<usize, usize>(1)).is_err_containing( & 1);
 ```
 
 ##### Failure Message
+
 ```bash
 	expected: Result[err] containing <"Oh no">
 	 but was: Result[err] containing <"Whoops">
 ```
 
-
 ### Strings
+
 #### starts_with
 
 Asserts that the subject `&str` or `String` starts with the provided `&str`.
 
 ##### Example
+
 ```rust
-assert_that(&"Hello").starts_with(&"H");
+assert_that( & "Hello").starts_with( & "H");
 ```
 
 ##### Failure Message
+
 ```bash
 	expected: string starting with <"A">
 	 but was: <"Hello">
@@ -584,11 +681,13 @@ assert_that(&"Hello").starts_with(&"H");
 Asserts that the subject `&str` or `String` ends with the provided `&str`.
 
 ##### Example
+
 ```rust
-assert_that(&"Hello").ends_with(&"o");
+assert_that( & "Hello").ends_with( & "o");
 ```
 
 ##### Failure Message
+
 ```bash
 	expected: string ending with <"A">
 	 but was: <"Hello">
@@ -599,8 +698,9 @@ assert_that(&"Hello").ends_with(&"o");
 Asserts that the subject `&str` or `String` contains the provided `&str`.
 
 ##### Example
+
 ```rust
-assert_that(&"Hello").contains(&"e");
+assert_that( & "Hello").contains( & "e");
 ```
 
 #### does_not_contain
@@ -608,11 +708,13 @@ assert_that(&"Hello").contains(&"e");
 Asserts that the subject `&str` or `String` does not contain the provided `&str`.
 
 ##### Example
+
 ```rust
-assert_that(&"Hello").does_not_contain(&"Bonjour");
+assert_that( & "Hello").does_not_contain( & "Bonjour");
 ```
 
 ##### Failure Message
+
 ```bash
 	expected: string containing <"A">
 	 but was: <"Hello">
@@ -623,27 +725,32 @@ assert_that(&"Hello").does_not_contain(&"Bonjour");
 Asserts that the subject `&str` or `String` represents an empty string.
 
 ##### Example
+
 ```rust
-assert_that(&"").is_empty();
+assert_that( & "").is_empty();
 ```
 
 ##### Failure Message
+
 ```bash
 	expected: an empty string
 	 but was: <"Hello">
 ```
 
 ### Vectors
+
 #### has_length
 
 Asserts that the length of the subject vector is equal to the provided length. The subject type must be of `Vec`.
 
 ##### Example
+
 ```rust
-assert_that(&vec![1, 2, 3, 4]).has_length(4);
+assert_that( & vec![1, 2, 3, 4]).has_length(4);
 ```
 
 ##### Failure Message
+
 ```bash
 	expected: vec to have length <1>
 	 but was: <3>
@@ -654,33 +761,37 @@ assert_that(&vec![1, 2, 3, 4]).has_length(4);
 Asserts that the subject vector is empty. The subject type must be of `Vec`.
 
 ##### Example
+
 ```rust
 let test_vec: Vec<u8> = vec![];
-assert_that(&test_vec).is_empty();
+assert_that( & test_vec).is_empty();
 ```
 
 ##### Failure Message
+
 ```bash
 	expected: an empty vec
 	 but was: a vec with length <1>
 ```
 
-
 ### HashMaps
+
 #### has_length
 
 Asserts that the length of the subject hashmap is equal to the provided length. The subject type must be of `HashMap`.
 
 ##### Example
+
 ```rust
 let mut test_map = HashMap::new();
 test_map.insert(1, 1);
 test_map.insert(2, 2);
 
-assert_that(&test_map).has_length(2);
+assert_that( & test_map).has_length(2);
 ```
 
 ##### Failure Message
+
 ```bash
 	expected: hashmap to have length <1>
 	 but was: <2>
@@ -691,12 +802,14 @@ assert_that(&test_map).has_length(2);
 Asserts that the subject hashmap is empty. The subject type must be of `HashMap`.
 
 ##### Example
+
 ```rust
 let test_map: HashMap<u8, u8> = HashMap::new();
-assert_that(&test_map).is_empty();
+assert_that( & test_map).is_empty();
 ```
 
 ##### Failure Message
+
 ```bash
 	expected: an empty hashmap
 	 but was: a hashmap with length <1>
@@ -709,22 +822,25 @@ Asserts that the subject hashmap contains the expected key. The subject type mus
 This will return a new `Spec` containing the associated value if the key is present.
 
 ##### Example
+
 ```rust
 let mut test_map = HashMap::new();
 test_map.insert("hello", "hi");
 
-assert_that(&test_map).contains_key(&"hello");
+assert_that( & test_map).contains_key( & "hello");
 ```
 
 ##### Chaining
+
 ```rust
 let mut test_map = HashMap::new();
 test_map.insert("hello", "hi");
 
-assert_that(&test_map).contains_key(&"hello").is_equal_to(&"hi");
+assert_that( & test_map).contains_key( & "hello").is_equal_to( & "hi");
 ```
 
 ##### Failure Message
+
 ```bash
 	expected: hashmap to contain key <"hello">
 	 but was: <["hey", "hi"]>
@@ -735,14 +851,16 @@ assert_that(&test_map).contains_key(&"hello").is_equal_to(&"hi");
 Asserts that the subject hashmap does not contain the provided key. The subject type must be of `HashMap`.
 
 ##### Example
+
 ```rust
 let mut test_map = HashMap::new();
 test_map.insert("hello", "hi");
 
-assert_that(&test_map).does_not_contain_key(&"hey");
+assert_that( & test_map).does_not_contain_key( & "hey");
 ```
 
 ##### Failure Message
+
 ```bash
 	expected: hashmap to not contain key <"hello">
 	 but was: present in hashmap
@@ -750,17 +868,20 @@ assert_that(&test_map).does_not_contain_key(&"hey");
 
 #### contains_entry
 
-Asserts that the subject hashmap contains the expected key with the expected value. The subject type must be of `HashMap`.
+Asserts that the subject hashmap contains the expected key with the expected value. The subject type must be of
+`HashMap`.
 
 ##### Example
+
 ```rust
 let mut test_map = HashMap::new();
 test_map.insert("hello", "hi");
 
-assert_that(&test_map).contains_entry(&"hello", &"hi");
+assert_that( & test_map).contains_entry( & "hello", & "hi");
 ```
 
 ##### Failure Message
+
 ```bash
     expected: hashmap containing key <"hi"> with value <"hey">
      but was: key <"hi"> with value <"hello"> instead
@@ -771,34 +892,39 @@ assert_that(&test_map).contains_entry(&"hello", &"hi");
 Asserts that the subject hashmap does not contain the provided key and value. The subject type must be of `HashMap`.
 
 ##### Example
+
 ```rust
 let mut test_map = HashMap::new();
 test_map.insert("hello", "hi");
 
-assert_that(&test_map).does_not_contain_entry(&"hello", &"hey");
+assert_that( & test_map).does_not_contain_entry( & "hello", & "hey");
 ```
 
 ##### Failure Message
+
 ```bash
     expected: hashmap to not contain key <"hello"> with value <"hi">
      but was: present in hashmap
 ```
 
 ### HashSets
+
 #### has_length
 
 Asserts that the length of the subject hashset is equal to the provided length. The subject type must be of `HashSet`.
 
 ##### Example
+
 ```rust
 let mut test_map = HashSet::new();
 test_map.insert(1);
 test_map.insert(2);
 
-assert_that(&test_map).has_length(2);
+assert_that( & test_map).has_length(2);
 ```
 
 ##### Failure Message
+
 ```bash
 	expected: hashset to have length <1>
 	 but was: <2>
@@ -809,32 +935,39 @@ assert_that(&test_map).has_length(2);
 Asserts that the subject hashset is empty. The subject type must be of `HashSet`.
 
 ##### Example
+
 ```rust
 let test_map: HashSet<u8> = HashSet::new();
-assert_that(&test_map).is_empty();
+assert_that( & test_map).is_empty();
 ```
 
 ##### Failure Message
+
 ```bash
 	expected: an empty hashset
 	 but was: a hashset with length <1>
 ```
 
 #### Iterator based asserts
+
 Since a hashset is implements Iterator, all the Iterator assertions below also apply (e.g. contains & does_not_contain)
 
 ### IntoIterator/Iterator
+
 #### contains
 
-Asserts that the subject contains the provided value. The subject must implement `IntoIterator` or `Iterator`, and the contained type must implement `PartialEq` and `Debug`.
+Asserts that the subject contains the provided value. The subject must implement `IntoIterator` or `Iterator`, and the
+contained type must implement `PartialEq` and `Debug`.
 
 ##### Example
+
 ```rust
-let test_vec = vec![1,2,3];
-assert_that(&test_vec).contains(&2);
+let test_vec = vec![1, 2, 3];
+assert_that( & test_vec).contains( & 2);
 ```
 
 ##### Failure Message
+
 ```bash
 	expected: iterator to contain <1>
 	 but was: <[5, 6]>
@@ -842,15 +975,18 @@ assert_that(&test_vec).contains(&2);
 
 #### does_not_contain
 
-Asserts that the subject does not contain the provided value. The subject must implement `IntoIterator` or `Iterator`, and the contained type must implement `PartialEq` and `Debug`.
+Asserts that the subject does not contain the provided value. The subject must implement `IntoIterator` or `Iterator`,
+and the contained type must implement `PartialEq` and `Debug`.
 
 ##### Example
+
 ```rust
-let test_vec = vec![1,2,3];
-assert_that(&test_vec).does_not_contain(&4);
+let test_vec = vec![1, 2, 3];
+assert_that( & test_vec).does_not_contain( & 4);
 ```
 
 ##### Failure Message
+
 ```bash
 	expected: iterator to not contain <1>
 	 but was: <[1, 2]>
@@ -858,15 +994,18 @@ assert_that(&test_vec).does_not_contain(&4);
 
 #### contains_all_of
 
-Asserts that the subject contains all of the provided values. The subject must implement `IntoIterator` or `Iterator`, and the contained type must implement `PartialEq` and `Debug`.
+Asserts that the subject contains all of the provided values. The subject must implement `IntoIterator` or `Iterator`,
+and the contained type must implement `PartialEq` and `Debug`.
 
 ##### Example
+
 ```rust
 let test_vec = vec![1, 2, 3];
-assert_that(&test_vec.iter()).contains_all_of(&vec![&2, &3]);
+assert_that( & test_vec.iter()).contains_all_of( & vec![&2, &3]);
 ```
 
 ##### Failure Message
+
 ```bash
     expected: iterator to contain items <[1, 6]>
      but was: <[1, 2, 3]>
@@ -874,11 +1013,13 @@ assert_that(&test_vec.iter()).contains_all_of(&vec![&2, &3]);
 
 #### mapped_contains
 
-Maps the values of the subject before asserting that the mapped subject contains the provided value. The subject must implement IntoIterator, and the type of the mapped value must implement `PartialEq`.
+Maps the values of the subject before asserting that the mapped subject contains the provided value. The subject must
+implement IntoIterator, and the type of the mapped value must implement `PartialEq`.
 
 NOTE: The panic message will refer to the mapped values rather than the values present in the original subject.
 
 ##### Example
+
 ```rust
 #[derive(PartialEq, Debug)]
 struct Simple {
@@ -887,10 +1028,11 @@ struct Simple {
 
 ...
 
-assert_that(&vec![Simple { val: 1 }, Simple { val: 2 } ]).mapped_contains(|x| &x.val, &2);
+assert_that( & vec![Simple { val: 1 }, Simple { val: 2 }]).mapped_contains( | x| & x.val, & 2);
 ```
 
 ##### Failure Message
+
 ```bash
 	expected: iterator to contain <5>
 	 but was: <[1, 2, 3]>
@@ -898,43 +1040,49 @@ assert_that(&vec![Simple { val: 1 }, Simple { val: 2 } ]).mapped_contains(|x| &x
 
 #### equals_iterator
 
-Asserts that the subject is equal to provided iterator. The subject must implement `IntoIterator` or `Iterator`, the contained type must implement `PartialEq` and `Debug` and the expected value must implement Iterator and Clone.
+Asserts that the subject is equal to provided iterator. The subject must implement `IntoIterator` or `Iterator`, the
+contained type must implement `PartialEq` and `Debug` and the expected value must implement Iterator and Clone.
 
 ##### Example
+
 ```rust
-let expected_vec = vec![1,2,3];
-let test_vec = vec![1,2,3];
-assert_that(&test_vec).equals_iterator(&expected_vec.iter());
+let expected_vec = vec![1, 2, 3];
+let test_vec = vec![1, 2, 3];
+assert_that( & test_vec).equals_iterator( & expected_vec.iter());
 ```
 
 ##### Failure Message
+
 ```bash
 	expected: Iterator item of <4> (read <[1, 2]>)
 	 but was: Iterator item of <3> (read <[1, 2]>)
 ```
 
-
 ### IntoIterator
+
 #### matching_contains
 
-Asserts that the subject contains a matching item by using the provided function. The subject must implement `IntoIterator`, and the contained type must implement `Debug`.
+Asserts that the subject contains a matching item by using the provided function. The subject must implement
+`IntoIterator`, and the contained type must implement `Debug`.
 
 ##### Example
+
 ```rust
 let mut test_into_iter = LinkedList::new();
 test_into_iter.push_back(TestEnum::Bad);
 test_into_iter.push_back(TestEnum::Good);
 test_into_iter.push_back(TestEnum::Bad);
 
-assert_that(&test_into_iter).matching_contains(|val| {
-    match val {
-        &TestEnum::Good => true,
-        _ => false
-    }
+assert_that( & test_into_iter).matching_contains( | val| {
+match val {
+& TestEnum::Good => true,
+_ => false
+}
 });
 ```
 
 ##### Failure Message
+
 ```bash
 expectation failed for iterator with values <[Bad, Bad, Bad]>
 ```
@@ -944,34 +1092,42 @@ expectation failed for iterator with values <[Bad, Bad, Bad]>
 The `Spec` struct implements a number of different bounded traits which provide assertions based upon the bound type.
 
 As a single example, length assertions are provided by the `VecAssertions` trait:
+
 ```rust
-pub trait VecAssertions {            
+pub trait VecAssertions {
     fn has_length(self, expected: usize);
 } 
 ```
 
 Which is then implemented by Spec:
+
 ```rust
 impl<'s, T> VecAssertions for Spec<'s, Vec<T>> {
     fn has_length(self, expected: usize) {
-      ...
+        ...
     }
 } 
 ```
 
-Naturally traits need to be included with a `use` before they apply, but to avoid an excessive number of `use` statements there is a `prelude` module which re-exports commonly used assertion traits.
+Naturally traits need to be included with a `use` before they apply, but to avoid an excessive number of `use`
+statements there is a `prelude` module which re-exports commonly used assertion traits.
 
 ## Creating your own
 
-To create your own assertions, simply create a new trait containing your assertion methods and implement Spec against it.
+To create your own assertions, simply create a new trait containing your assertion methods and implement Spec against
+it.
 
-To fail an assertion, create a new `AssertionFailure` struct using `from_spec(...)` within your assertion method and pass in `self`.
+To fail an assertion, create a new `AssertionFailure` struct using `from_spec(...)` within your assertion method and
+pass in `self`.
 
-`AssertionFailure` also implements builder methods `with_expected(...)`, `with_actual(...)` and `fail(...)`, which provides the necessary functionality to fail the test with the usual message format. If you need greater control of the failure message, you can call `fail_with_message(...)` which will directly print the provided message.
+`AssertionFailure` also implements builder methods `with_expected(...)`, `with_actual(...)` and `fail(...)`, which
+provides the necessary functionality to fail the test with the usual message format. If you need greater control of the
+failure message, you can call `fail_with_message(...)` which will directly print the provided message.
 
 In either case, any description provided using `asserting(...)` will always be prepended to the panic message.
 
 For example, to create an assertion that the length of a `Vec` is at least a certain value:
+
 ```rust
 trait VecAtLeastLength {
     fn has_at_least_length(&mut self, expected: usize);
