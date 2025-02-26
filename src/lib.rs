@@ -271,11 +271,9 @@ pub fn asserting(description: &str) -> SpecDescription {
 }
 
 impl<'r> SpecDescription<'r> {
-    pub fn at_location(self, location: String) -> Self {
-        let mut description = self;
-
-        description.location = Some(location);
-        description
+    pub fn at_location(mut self, location: String) -> Self {
+        self.location = Some(location);
+        self
     }
 
     /// Creates a new assertion, passing through its description.
@@ -315,18 +313,16 @@ impl<'r, T: DescriptiveSpec<'r>> AssertionFailure<'r, T> {
 
     /// Builder method to add the expected value for the panic message.
     pub fn with_expected(&mut self, expected: String) -> &mut Self {
-        let mut assertion = self;
-        assertion.expected = Some(expected);
+        self.expected = Some(expected);
 
-        assertion
+        self
     }
 
     /// Builder method to add the actual value for the panic message.
     pub fn with_actual(&mut self, actual: String) -> &mut Self {
-        let mut assertion = self;
-        assertion.actual = Some(actual);
+        self.actual = Some(actual);
 
-        assertion
+        self
     }
 
     /// Builds the failure message with a description (if present), the expected value,
@@ -393,21 +389,19 @@ impl<'s, S> Spec<'s, S> {
     ///
     /// Usually you would not call this directly, but use the macro forms of `assert_that` and
     /// `asserting`, which will call this on your behalf with the correct location.
-    pub fn at_location(self, location: String) -> Self {
-        let mut spec = self;
-        spec.location = Some(location);
+    pub fn at_location(mut self, location: String) -> Self {
+        self.location = Some(location);
 
-        spec
+        self
     }
 
     /// Associates a name with the subject.
     ///
     /// This will be displayed if the assertion fails.
-    pub fn named(self, subject_name: &'s str) -> Self {
-        let mut spec = self;
-        spec.subject_name = Some(subject_name);
+    pub fn named(mut self, subject_name: &'s str) -> Self {
+        self.subject_name = Some(subject_name);
 
-        spec
+        self
     }
 }
 
