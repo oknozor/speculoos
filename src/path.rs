@@ -16,7 +16,7 @@ pub trait PathAssertions {
     fn has_file_name<'r, E: Borrow<&'r str>>(&mut self, expected_file_name: E);
 }
 
-impl<'s, T> PathAssertions for Spec<'s, T>
+impl<T> PathAssertions for Spec<'_, T>
 where
     T: AsRef<Path>,
 {
@@ -151,7 +151,7 @@ fn build_file_name_message(file_name: &str) -> String {
 
 #[cfg(test)]
 mod tests {
-
+    #![allow(clippy::needless_borrows_for_generic_args)]
     use super::super::prelude::*;
 
     use std::path::{Path, PathBuf};

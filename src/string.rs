@@ -15,7 +15,7 @@ pub trait StrAssertions<T> {
     fn is_empty(&mut self);
 }
 
-impl<'s, T> StrAssertions<T> for Spec<'s, T>
+impl<T> StrAssertions<T> for Spec<'_, T>
 where
     T: AsRef<str>,
 {
@@ -146,6 +146,8 @@ fn is_empty<'s, S: DescriptiveSpec<'s>>(spec: &'s S, subject: &str) {
 
 #[cfg(test)]
 mod tests {
+    #![allow(clippy::needless_borrows_for_generic_args)]
+    #![allow(clippy::unnecessary_to_owned)]
     use super::super::prelude::*;
     use std::borrow::Cow;
 

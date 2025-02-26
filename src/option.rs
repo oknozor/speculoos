@@ -22,7 +22,7 @@ where
     fn contains_value<E: Borrow<T>>(&mut self, expected_value: E);
 }
 
-impl<'s, T> ContainingOptionAssertions<T> for Spec<'s, Option<T>>
+impl<T> ContainingOptionAssertions<T> for Spec<'_, Option<T>>
 where
     T: Debug + PartialEq,
 {
@@ -107,7 +107,7 @@ where
 
 #[cfg(test)]
 mod tests {
-
+    #![allow(clippy::needless_borrows_for_generic_args)]
     use super::super::prelude::*;
 
     #[test]

@@ -259,6 +259,7 @@ where
 
 #[cfg(test)]
 mod tests {
+    #![allow(clippy::needless_borrows_for_generic_args)]
 
     use super::super::prelude::*;
 

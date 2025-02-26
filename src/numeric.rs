@@ -21,7 +21,7 @@ where
     fn is_greater_than_or_equal_to<E: Borrow<T>>(&mut self, other: E);
 }
 
-impl<'s, T> OrderedAssertions<T> for Spec<'s, T>
+impl<T> OrderedAssertions<T> for Spec<'_, T>
 where
     T: Debug + PartialOrd,
 {
@@ -115,7 +115,7 @@ pub trait FloatAssertions<T: Float> {
 }
 
 #[cfg(feature = "num")]
-impl<'s, T: Float + Debug> FloatAssertions<T> for Spec<'s, T> {
+impl<T: Float + Debug> FloatAssertions<T> for Spec<'_, T> {
     /// Asserts that the subject is close to the expected value by the specified tolerance.
     /// The subject type must implement `Float` and `Debug`.
     ///
@@ -144,6 +144,7 @@ impl<'s, T: Float + Debug> FloatAssertions<T> for Spec<'s, T> {
 
 #[cfg(test)]
 mod tests {
+    #![allow(clippy::needless_borrows_for_generic_args)]
 
     use super::super::prelude::*;
 

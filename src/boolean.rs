@@ -7,7 +7,7 @@ pub trait BooleanAssertions {
     fn is_false(&mut self);
 }
 
-impl<'s> BooleanAssertions for Spec<'s, bool> {
+impl BooleanAssertions for Spec<'_, bool> {
     /// Asserts that the subject is true. The subject type must be `bool`.
     ///
     /// ```rust

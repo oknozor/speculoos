@@ -29,7 +29,7 @@ where
         E: PartialEq;
 }
 
-impl<'s, T, E> ContainingResultAssertions<T, E> for Spec<'s, Result<T, E>>
+impl<T, E> ContainingResultAssertions<T, E> for Spec<'_, Result<T, E>>
 where
     T: Debug,
     E: Debug,
@@ -163,7 +163,7 @@ where
 
 #[cfg(test)]
 mod tests {
-
+    #![allow(clippy::needless_borrows_for_generic_args)]
     use super::super::prelude::*;
 
     #[test]
