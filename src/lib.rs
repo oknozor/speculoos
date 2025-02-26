@@ -187,17 +187,13 @@ macro_rules! assert_that {
         assert_that!($subject)
     };
     ($subject:tt) => {{
-        let line = line!();
-        let file = file!();
-        assert_that(&$subject).at_location(format!("{}:{}", file, line))
+        assert_that(&$subject)
     }};
     (&$subject:expr) => {
         assert_that!($subject)
     };
     ($subject:expr) => {{
-        let line = line!();
-        let file = file!();
-        assert_that(&$subject).at_location(format!("{}:{}", file, line))
+        assert_that(&$subject)
     }};
 }
 
@@ -207,9 +203,7 @@ macro_rules! asserting {
         asserting!($description)
     };
     ($description:tt) => {{
-        let line = line!();
-        let file = file!();
-        asserting(&$description).at_location(format!("{}:{}", file, line))
+        asserting(&$description)
     }};
 }
 
@@ -561,59 +555,6 @@ mod tests {
         let value = "Hello";
         asserting("closure")
             .that(&value)
-            .matches(|val| val.eq(&"Hi"));
-    }
-
-    #[test]
-    #[should_panic(expected = "\n\texpected: <2>\n\t but was: <1>\
-                   \n\n\tat location: src/lib.rs:")]
-    fn should_contain_file_and_line_in_panic_for_assertions() {
-        assert_that!(&1).is_equal_to(&2);
-    }
-
-    #[test]
-    #[should_panic(expected = "\n\texpectation failed for value <\"Hello\">\
-                   \n\n\tat location: src/lib.rs:")]
-    fn should_contain_file_and_line_for_assertions_if_message_is_provided() {
-        let value = "Hello";
-        assert_that!(&value).matches(|val| val.eq(&"Hi"));
-    }
-
-    #[test]
-    #[should_panic(expected = "\n\ttest condition:\n\texpected: <2>\n\t but was: <1>\
-                   \n\n\tat location: src/lib.rs:")]
-    fn should_contain_file_and_line_in_panic_for_descriptive_assertions() {
-        asserting!(&"test condition").that(&1).is_equal_to(&2);
-    }
-
-    #[test]
-    #[should_panic(expected = "\n\tclosure:\n\texpectation failed for value <\"Hello\">\
-                   \n\n\tat location: src/lib.rs:")]
-    fn should_contain_file_and_line_for_descriptive_assertions_if_message_is_provided() {
-        let value = "Hello";
-        asserting!(&"closure")
-            .that(&value)
-            .matches(|val| val.eq(&"Hi"));
-    }
-
-    #[test]
-    #[should_panic(
-        expected = "\n\tfor subject [number one]\n\texpected: <2>\n\t but was: <1>\
-                   \n\n\tat location: src/lib.rs:"
-    )]
-    fn should_contain_subject_name_in_panic_for_assertions() {
-        assert_that!(&1).named("number one").is_equal_to(&2);
-    }
-
-    #[test]
-    #[should_panic(
-        expected = "\n\tfor subject [a word]\n\texpectation failed for value <\"Hello\">\
-                   \n\n\tat location: src/lib.rs:"
-    )]
-    fn should_contain_subject_name_in_panic_for_assertions_if_message_is_provided() {
-        let value = "Hello";
-        assert_that!(&value)
-            .named("a word")
             .matches(|val| val.eq(&"Hi"));
     }
 
