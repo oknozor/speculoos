@@ -10,6 +10,7 @@ description = "Fluent test assertions"
 repository = "https://github.com/oknozor/speculoos"
 readme = "README.md"
 keywords = ["fluent", "testing", "matchers", "assert", "assertions"]
+edition = "2021"
 
 [features]
 default = ["num"]
