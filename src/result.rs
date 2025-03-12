@@ -219,7 +219,7 @@ mod tests {
     }
 
     #[test]
-    fn should_not_panic_if_result_is_ok_with_uncomparable_ok() {
+    fn should_not_panic_if_result_is_ok_with_uncomparable_err() {
         #[derive(Debug)]
         struct Incomparable;
         let result: Result<&str, Incomparable> = Ok("Hello");

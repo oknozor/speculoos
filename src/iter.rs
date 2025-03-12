@@ -364,7 +364,7 @@ where
                 AssertionFailure::from_spec(spec)
                     .with_expected(format!("Completed iterator (read <{:?}>)", read_expected))
                     .with_actual(format!(
-                        "Iterator item of <{:?}> (read <{:?}>",
+                        "Iterator item of <{:?}> (read <{:?}>)",
                         actual, read_subject
                     ))
                     .fail();
@@ -374,10 +374,10 @@ where
             (None, Some(expected)) => {
                 AssertionFailure::from_spec(spec)
                     .with_expected(format!(
-                        "Iterator item of <{:?}> (read <{:?}>",
+                        "Iterator item of <{:?}> (read <{:?}>)",
                         expected, read_expected
                     ))
-                    .with_actual(format!("Completed iterator (read <{:?}>", read_subject))
+                    .with_actual(format!("Completed iterator (read <{:?}>)", read_subject))
                     .fail();
 
                 unreachable!();

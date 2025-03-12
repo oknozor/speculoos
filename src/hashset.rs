@@ -73,8 +73,8 @@ where
 
         if subject.is_empty() {
             AssertionFailure::from_spec(self)
-                .with_expected("an non empty HashSet".to_string())
-                .with_actual(format!("a HashSet with length <{:?}>", subject.len()))
+                .with_expected("a non empty HashSet".to_string())
+                .with_actual("an empty HashSet".to_string())
                 .fail();
         }
     }
@@ -130,8 +130,8 @@ mod tests {
     }
 
     #[test]
-    #[should_panic(expected = "\n\texpected: an non empty HashSet\
-                   \n\t but was: a HashSet with length <0>")]
+    #[should_panic(expected = "\n\texpected: a non empty HashSet\
+                   \n\t but was: an empty HashSet")]
     fn should_panic_if_hash_set_was_expected_to_be_empty_and_is_not() {
         let test_map: HashSet<u8> = HashSet::new();
         assert_that(&test_map).is_not_empty();
@@ -159,7 +159,7 @@ mod tests {
     // Unfortunately the order of the keys can change. Doesn't seem to make sense to sort them
     // just for the sake of checking the panic message.
     #[should_panic]
-    fn should_not_panic_if_hash_set_does_not_contain() {
+    fn should_panic_if_hash_set_does_not_contain() {
         let mut test_map = HashSet::new();
         test_map.insert("hi");
         test_map.insert("hey");

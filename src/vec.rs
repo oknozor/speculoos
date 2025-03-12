@@ -57,8 +57,8 @@ impl<T> VecAssertions for Spec<'_, Vec<T>> {
 
         if subject.is_empty() {
             AssertionFailure::from_spec(self)
-                .with_expected("an non empty vec".to_string())
-                .with_actual(format!("a vec with length {}", subject.len()))
+                .with_expected("a non empty vec".to_string())
+                .with_actual("an empty vec".to_string())
                 .fail();
         }
     }
@@ -113,8 +113,8 @@ impl<'s, T> VecAssertions for Spec<'s, &'s Vec<T>> {
 
         if subject.is_empty() {
             AssertionFailure::from_spec(self)
-                .with_expected("an non empty vec".to_string())
-                .with_actual(format!("a vec with length {}", subject.len()))
+                .with_expected("a non empty vec".to_string())
+                .with_actual("an empty vec".to_string())
                 .fail();
         }
     }
@@ -137,6 +137,12 @@ mod tests {
     fn should_panic_if_vec_length_does_not_match_expected() {
         let test_vec = vec![1, 2, 3];
         assert_that(&test_vec).has_length(1);
+    }
+
+    #[test]
+    #[should_panic(expected = "\n\texpected: vec to have length <1>\n\t but was: <3>")]
+    fn should_panic_if_ref_vec_length_does_not_match_expected() {
+        let test_vec = vec![1, 2, 3];
         assert_that(&&test_vec).has_length(1);
     }
 
@@ -152,6 +158,35 @@ mod tests {
                    \n\t but was: a vec with length <1>")]
     fn should_panic_if_vec_was_expected_to_be_empty_and_is_not() {
         assert_that(&vec![1]).is_empty();
+    }
+
+    #[test]
+    #[should_panic(expected = "\n\texpected: an empty vec\
+                   \n\t but was: a vec with length <1>")]
+    fn should_panic_if_ref_vec_was_expected_to_be_empty_and_is_not() {
         assert_that(&&vec![1]).is_empty();
+    }
+
+    #[test]
+    fn should_not_panic_if_vec_was_expected_to_be_not_empty_and_is() {
+        let test_vec: Vec<u8> = vec![1];
+        assert_that(&test_vec).is_not_empty();
+        assert_that(&&test_vec).is_not_empty();
+    }
+
+    #[test]
+    #[should_panic(expected = "\n\texpected: a non empty vec\
+                   \n\t but was: an empty vec")]
+    fn should_panic_if_vec_was_expected_to_be_not_empty_and_is_not() {
+        let test_vec: Vec<u8> = vec![];
+        assert_that(&test_vec).is_not_empty();
+    }
+
+    #[test]
+    #[should_panic(expected = "\n\texpected: a non empty vec\
+                   \n\t but was: an empty vec")]
+    fn should_panic_if_ref_vec_was_expected_to_be_not_empty_and_is_not() {
+        let test_vec: Vec<u8> = vec![];
+        assert_that(&&test_vec).is_not_empty();
     }
 }

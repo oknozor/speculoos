@@ -169,7 +169,7 @@ mod tests {
     }
 
     #[test]
-    #[should_panic(expected = "\n\texpected: option[none]\n\t but was: option<\"Hello\"")]
+    #[should_panic(expected = "\n\texpected: option[none]\n\t but was: option<\"Hello\">")]
     fn should_panic_if_option_is_not_empty_but_was_expected_as_empty() {
         let option = Some("Hello");
         assert_that(&option).is_none();
