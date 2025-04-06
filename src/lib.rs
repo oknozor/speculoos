@@ -154,6 +154,9 @@ pub mod result;
 pub mod string;
 pub mod vec;
 
+#[cfg(feature = "json")]
+pub mod json;
+
 // Disable colours during tests, otherwise trying to assert on the panic message becomes
 // significantly more annoying.
 #[cfg(not(test))]
