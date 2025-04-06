@@ -14,3 +14,6 @@ pub use super::{assert_that, asserting};
 
 #[cfg(feature = "num")]
 pub use super::numeric::FloatAssertions;
+
+#[cfg(feature = "json")]
+pub use super::json::{JsonAssertions, JsonObjectAssertions};
