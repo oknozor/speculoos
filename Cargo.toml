@@ -1,6 +1,6 @@
 [package]
 name = "speculoos"
-version = "0.12.0"
+version = "0.13.0"
 authors = [
     "cfrancia <cfrancia@users.noreply.github.com>",
     "oknozor <paul.delafosse@protonmail.com>"
