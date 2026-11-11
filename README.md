@@ -178,11 +178,13 @@ Note: Descriptions and examples for each of the assertions are further down in t
 
 #### is_empty
 
-### Vectors
+### Slices
 
 #### has_length
 
 #### is_empty
+
+#### is_not_empty
 
 ### HashMaps
 
@@ -1091,19 +1093,19 @@ expectation failed for iterator with values <[Bad, Bad, Bad]>
 
 The `Spec` struct implements a number of different bounded traits which provide assertions based upon the bound type.
 
-As a single example, length assertions are provided by the `VecAssertions` trait:
+As a single example, length assertions are provided by the `SliceAssertions` trait:
 
 ```rust
-pub trait VecAssertions {
-    fn has_length(self, expected: usize);
+pub trait SliceAssertions {
+    fn has_length(&self, expected: usize);
 } 
 ```
 
 Which is then implemented by Spec:
 
 ```rust
-impl<'s, T> VecAssertions for Spec<'s, Vec<T>> {
-    fn has_length(self, expected: usize) {
+impl<S> SliceAssertions for Spec<'_, S> where S: SliceLike {
+    fn has_length(&self, expected: usize) {
         ...
     }
 } 

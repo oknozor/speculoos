@@ -151,6 +151,7 @@ pub mod option;
 pub mod path;
 pub mod prelude;
 pub mod result;
+pub mod slice;
 pub mod string;
 pub mod vec;
 
